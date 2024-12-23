@@ -26,6 +26,7 @@ jobs:
     outputs:
       release_name: ${{ steps.current-date.outputs.release_name }}
       cache_key: ${{ steps.current-date.outputs.cache_key }}
+      current_date: ${{ steps.current-date.outputs.current_date }}
     steps:
       - name: Get Current Date and Release Name
         id: current-date
@@ -35,12 +36,14 @@ jobs:
           cache_key="raspOVOS-${{ github.run_id }}"
           echo "release_name=$release_name" >> $GITHUB_OUTPUT
           echo "cache_key=$cache_key" >> $GITHUB_OUTPUT
+          echo "current_date=$current_date" >> $GITHUB_OUTPUT
 
       - name: Print outputs
         shell: bash
         run: |
           echo "cache_key: ${{ steps.current-date.outputs.cache_key }}"
           echo "release_name: ${{ steps.current-date.outputs.release_name }}"
+          echo "current_date: ${{ steps.current-date.outputs.current_date }}"
 
   # Stage 2: Build Image
   modify-rpi-image:
