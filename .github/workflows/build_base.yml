@@ -36,6 +36,3 @@ jobs:
     needs: [modify-rpi-image, check-release-or-create, get-date-release-name]
     uses: ./.github/workflows/stages/upload_image.yml
 
-  update-headless-workflow:
-    needs: [upload-image, get-date-release-name, modify-rpi-image]
-    uses: ./.github/workflows/stages/update_headless_workflow.yml
