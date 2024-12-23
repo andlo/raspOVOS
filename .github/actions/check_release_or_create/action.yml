@@ -14,10 +14,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Check release or create
-      id: check-release-or-create
-      shell: bash
-  steps:
       - name: Check if Release Exists
         id: get-release-id
         shell: bash
