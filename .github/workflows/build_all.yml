@@ -25,6 +25,7 @@ jobs:
         uses: ./.github/actions/check-release-or-create
         with:
           release_name: ${{ steps.current-date.outputs.release_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Base Image
         uses: ./.github/actions/modify-rpi-image
