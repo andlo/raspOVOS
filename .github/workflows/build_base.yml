@@ -24,18 +24,23 @@ jobs:
   get-date-release-name:
     uses: ./.github/workflows/get_date_release_name.yml
 
-  modify-rpi-image:
-    needs: get-date-release-name
-    uses: ./.github/workflows/modify_rpi_image.yml
-
   check-release-or-create:
-    needs: [get-date-release-name, modify-rpi-image]
+    needs: [get-date-release-name]
     uses: ./.github/workflows/check_release_or_create.yml
 
-  upload-image:
-    needs: [modify-rpi-image, check-release-or-create, get-date-release-name]
-    uses: ./.github/workflows/upload_image.yml
+  build-base-image:
+    needs: [check-release-or-create, get-date-release-name] 
+    uses: ./.github/workflows/modify_rpi_image.yml
+    with:
+      base-image-url: https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2024-11-19/2024-11-19-raspios-bookworm-arm64-lite.img.xz
+      release_name: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
+      script-path: ./base/build_base.sh
 
-  update-headless-workflow:
-    needs: [upload-image, get-date-release-name, modify-rpi-image]
-    uses: ./.github/workflows/update_headless_workflow.yml
+  upload-image:
+    needs: [build-base-image, check-release-or-create, get-date-release-name]
+    uses: ./.github/workflows/upload_image.yml
+    with:
+      image_path: ${{ needs.build-base-image.outputs.image_path }}
+      release_id: ${{ needs.check-release-or-create.outputs.release_id }}
+      cache_key: ${{ needs.check-release-or-create.outputs.cache_key }}
+  

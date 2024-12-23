@@ -1,4 +1,4 @@
-name: Build Image
+name: Modify Raspberry Pi Image
 
 on:
   workflow_call:
@@ -7,6 +7,13 @@ on:
         required: true
       cache_key:
         required: true
+      base-image-url: 
+        requered: true
+      image-path:
+        required: true
+      script-path:
+        required: true 
+
     outputs:
       image_path:
         description: 'Path of the created image'
@@ -26,14 +33,14 @@ jobs:
           PASSWORD: 'ovos'
           HOSTNAME: "raspOVOS"
         with:
-          base-image-url: https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2024-11-19/2024-11-19-raspios-bookworm-arm64-lite.img.xz
-          image-path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
+          base-image-url: ${{ inputs.base-image-url }}
+          image-path: ${{ inputs.image-path }}
           compress-with-xz: true
           cache: false
           shrink: true
           mount-repository: true
           env-vars: USER,PASSWORD,HOSTNAME
-          script-path: build_base.sh
+          script-path: ${{ inputs.script-path }}
 
       - name: Print outputs
         shell: bash
