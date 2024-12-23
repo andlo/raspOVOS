@@ -44,7 +44,7 @@ jobs:
         uses: ./.github/actions/modify-rpi-image
         with:
           mycroft_config_files: "mycroft.conf"
-          base-image-url: ${{ release_path }}/raspOVOS-NO-OVOS-bookworm-arm64-lite.img.xz
+          base-image-url: ${{ steps.current-date.outputs.release_path }}/raspOVOS-NO-OVOS-bookworm-arm64-lite.img.xz
           image-path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
           script-path: build_raspOVOS.sh
           image_path: "raspOVOS-bookworm-arm64-lite.img"
