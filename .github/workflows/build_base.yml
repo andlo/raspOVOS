@@ -3,10 +3,8 @@ name: build base image
 on:
   workflow_dispatch:
   push:
-    branches:
-      - master
     paths:
-      - '.github/workflows/build_base.yml'
+     # - '.github/workflows/build_base.yml'
       - 'build_base.sh'
       - 'tuning/**'
       - 'services/kdeconnect.service'
@@ -22,8 +20,8 @@ on:
 
 jobs:
   get-date-release-name:
-    uses: ./.github/workflows/stages/get_date_release_name.yml@main
-
+    uses: ./.github/workflows/stages/get_date_release_name.yml
+      
 #  modify-rpi-image:
 #    needs: get-date-release-name
 #    uses: ./.github/workflows/stages/modify_rpi_image.yml
