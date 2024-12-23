@@ -2,10 +2,16 @@ name: Generate Outputs
 description: Generates some output values
 runs:
   using: 'composite'
+  outputs:
+    message:
+      description: "The message to display"
+    current_date:
+      description: "The current date"
   steps:
     - name: Generate Outputs
       id: generate-outputs
-      shell: bash
       run: |
-        echo "message=Hello, World!" >> $GITHUB_OUTPUT
-        echo "current_date=$(date)" >> $GITHUB_OUTPUT
+        message="Hello, World!"
+        current_date=$(date)
+        echo "message=$message" >> $GITHUB_OUTPUT
+        echo "current_date=$current_date" >> $GITHUB_OUTPUT
