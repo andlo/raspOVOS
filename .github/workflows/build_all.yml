@@ -19,6 +19,7 @@ jobs:
         uses: ./.github/actions/get-date-release-name
 
       - name: Debug Outputs from Get Date and Release Name
+        shell: bash
         run: |
           echo "DEBUG: release_name: ${{ steps.get-date-release.outputs.release_name }}"
           echo "DEBUG: current_date: ${{ steps.get-date-release.outputs.current_date }}"
