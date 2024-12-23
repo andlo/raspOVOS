@@ -42,7 +42,7 @@ jobs:
       - name: Upload Base Image
         uses: ./.github/actions/upload-image
         with:
-          image_path: ${{ steps.create-image.outputs.image-path }}
+          image_path: ${{ steps.modify-rpi-image.outputs.image-path }}
           release_id: ${{ steps.check-release.outputs.release_id }}
           cache_key: ${{ steps.get-date-release.outputs.cache_key }}
   
@@ -59,6 +59,6 @@ jobs:
       - name: Upload Headless Image
         uses: ./.github/actions/upload-image
         with:
-          image_path: ${{ steps.create-image.outputs.image-path }}
+          image_path: ${{ steps.modify-rpi-image.outputs.image-path }}
           release_id: ${{ steps.check-release.outputs.release_id }}
           cache_key: ${{ steps.get-date-release.outputs.cache_key }}
