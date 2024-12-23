@@ -26,6 +26,7 @@ jobs:
     outputs:
       release_name: ${{ steps.current-date.outputs.release_name }}
       cache_key: ${{ steps.current-date.outputs.cache_key }}
+      curent_date: ${{ steps.current-date.outputs.current_date }}
     steps:
       - name: Get Current Date and Release Name
         id: current-date
@@ -41,6 +42,7 @@ jobs:
         run: |
           echo "cache_key: ${{ steps.current-date.outputs.cache_key }}"
           echo "release_name: ${{ steps.current-date.outputs.release_name }}"
+          echo "current_date: ${{ steps.current-date.outputs.current_date }}
 
   # Stage 2: Build Image
   modify-rpi-image:
@@ -61,7 +63,7 @@ jobs:
           HOSTNAME: "raspOVOS"
           CONSTRAINTS: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
         with:
-          base-image-url: "https://github.com/${{ github.repository }}/releases/download/raspOVOS-bookworm-arm64-lite-${{steps.current-date.current_date}}/raspOVOS-NO-OVOS-bookworm-arm64-lite.img.xz"
+          base-image-url: "https://github.com/${{ github.repository }}/releases/download/raspOVOS-bookworm-arm64-lite-${{ needs.get-date-release-name.outputs.current_date }}/raspOVOS-NO-OVOS-bookworm-arm64-lite.img.xz"
           image-path: raspOVOS-bookworm-arm64-lite.img
           compress-with-xz: true
           shrink: true
