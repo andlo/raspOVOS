@@ -5,6 +5,7 @@ runs:
   steps:
     - name: Get Current Date and Release Name
       id: current-date
+      shell: bash
       run: |
         current_date=$(date +'%Y-%m-%d')
         release_name="raspOVOS-arm64-lite-${current_date}"
@@ -16,6 +17,7 @@ runs:
         echo "cache_key=$cache_key" >> $GITHUB_OUTPUT
         echo "current_date=$current_date" >> $GITHUB_OUTPUT
     - name: Print outputs
+      shell: bash
       run: |
         echo "cache_key: ${{ steps.current-date.outputs.cache_key }}"
         echo "release_name: ${{ steps.current-date.outputs.release_name }}"
