@@ -5,14 +5,17 @@ on:
     outputs:
       release_name:
         description: 'The generated release name'
-        value: ""
+        value: ${{ jobs.get-date-release-name.outputs.release_name }}
       cache_key:
         description: 'The generated cache key'
-        value: ""
+        value: ${{ jobs.get-date-release-name.outputs.cache_key }}
 
 jobs:
   get-date-release-name:
     runs-on: ubuntu-latest
+    outputs:
+      release_name: ${{ steps.current-date.outputs.release_name }}
+      cache_key: ${{ steps.current-date.outputs.cache_key }}
     steps:
       - name: Get Current Date and Release Name
         id: current-date
