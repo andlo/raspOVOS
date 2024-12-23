@@ -22,6 +22,12 @@ jobs:
         id: get-date-release
         uses: ./.github/actions/get-date-release-name
 
+      - name: Debug Outputs from Get Date and Release Name
+        run: |
+          echo "release_name: ${{ steps.get-date-release.outputs.release_name }}"
+          echo "current_date: ${{ steps.get-date-release.outputs.current_date }}"
+          echo "cache_key: ${{ steps.get-date-release.outputs.cache_key }}"
+
       - name: Check Release or Create
         id: check-release
         uses: ./.github/actions/check-release-or-create
