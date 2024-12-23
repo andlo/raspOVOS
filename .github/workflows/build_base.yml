@@ -1,0 +1,41 @@
+name: build base image
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/build_base.yml'
+      - 'build_base.sh'
+      - 'tuning/**'
+      - 'services/kdeconnect.service'
+      - 'services/wlan0-power.service'
+      - 'packages/setup_pipewire.sh'
+      - 'packages/setup_kdeconnect.sh'
+      - 'packages/setup_balena_wifi.sh'
+      - 'packages/wifi-connect/**'
+      - 'packages/wifi-connect.bin'
+      - 'patches/firstboot'
+      - 'patches/userconf'
+      - 'patches/boot_config.txt'
+
+jobs:
+  get-date-release-name:
+    uses: ./.github/workflows/stages/get_date_release_name.yml
+
+  modify-rpi-image:
+    needs: get-date-release-name
+    uses: ./.github/workflows/stages/modify_rpi_image.yml
+
+  check-release-or-create:
+    needs: [get-date-release-name, modify-rpi-image]
+    uses: ./.github/workflows/stages/check_release_or_create.yml
+
+  upload-image:
+    needs: [modify-rpi-image, check-release-or-create, get-date-release-name]
+    uses: ./.github/workflows/stages/upload_image.yml
+
+  update-headless-workflow:
+    needs: [upload-image, get-date-release-name, modify-rpi-image]
+    uses: ./.github/workflows/stages/update_headless_workflow.yml

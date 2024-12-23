@@ -1,0 +1,51 @@
+name: Build Image
+
+on:
+  workflow_call:
+    inputs:
+      release_name:
+        required: true
+      cache_key:
+        required: true
+    outputs:
+      image_path:
+        description: 'Path of the created image'
+
+jobs:
+  modify-rpi-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Tune base Raspberry Pi OS Bookworm
+        uses: TigreGotico/rpi-image-modifier@main
+        id: create-image
+        env:
+          USER: 'ovos'
+          PASSWORD: 'ovos'
+          HOSTNAME: "raspOVOS"
+        with:
+          base-image-url: https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2024-11-19/2024-11-19-raspios-bookworm-arm64-lite.img.xz
+          image-path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
+          compress-with-xz: true
+          cache: false
+          shrink: true
+          mount-repository: true
+          env-vars: USER,PASSWORD,HOSTNAME
+          script-path: build_base.sh
+
+      - name: Print outputs
+        shell: bash
+        run: |
+          echo "image-path: ${{ steps.create-image.outputs.image-path }}"
+          echo "image-size: ${{ steps.create-image.outputs.image-size }}"
+          echo "image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}"
+        outputs:
+          image_path: ${{ steps.create-image.outputs.image-path }}
+
+      - name: Save Image to Cache
+        uses: actions/cache@v4
+        with:
+          path: .
+          key: ${{ inputs.cache_key }}
