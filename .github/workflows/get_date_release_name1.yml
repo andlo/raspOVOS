@@ -2,13 +2,6 @@ name: Get Current Date and Release Name
 
 on:
   workflow_call:
-    inputs:
-      release_name:
-        required: true
-        type: string
-      cache_key:
-        required: true
-        type: string
     outputs:
       release_name:
         description: 'The generated release name'
