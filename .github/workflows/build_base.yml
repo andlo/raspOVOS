@@ -22,17 +22,17 @@ on:
 
 jobs:
   get-date-release-name:
-    uses: ./.github/workflows/stages/get_date_release_name.yml
+    uses: ./.github/workflows/get_date_release_name.yml
 
-  modify-rpi-image:
-    needs: get-date-release-name
-    uses: ./.github/workflows/stages/modify_rpi_image.yml
+#  modify-rpi-image:
+#    needs: get-date-release-name
+#    uses: ./.github/workflows/stages/modify_rpi_image.yml
 
-  check-release-or-create:
-    needs: [get-date-release-name, modify-rpi-image]
-    uses: ./.github/workflows/stages/check_release_or_create.yml
+#  check-release-or-create:
+#    needs: [get-date-release-name, modify-rpi-image]
+#    uses: ./.github/workflows/stages/check_release_or_create.yml
 
-  upload-image:
-    needs: [modify-rpi-image, check-release-or-create, get-date-release-name]
-    uses: ./.github/workflows/stages/upload_image.yml
+#  upload-image:
+#    needs: [modify-rpi-image, check-release-or-create, get-date-release-name]
+#    uses: ./.github/workflows/stages/upload_image.yml
 
