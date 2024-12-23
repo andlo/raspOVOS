@@ -22,7 +22,7 @@ on:
 
 jobs:
   get-date-release-name:
-    uses: ./.github/workflows/stages/get_date_release_name.yml@dev2
+    uses: ./.github/workflows/stages/get_date_release_name.yml@main
 
 #  modify-rpi-image:
 #    needs: get-date-release-name
