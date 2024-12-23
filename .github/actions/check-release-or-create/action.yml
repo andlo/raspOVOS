@@ -15,7 +15,7 @@ runs:
       shell: bash
       run: |
         release_name="${{ inputs.release_name }}"
-        echo "Checking release: $release_name"
+        echo "Release name: $release_name"
         release=$(curl -s -H "Authorization: token ${{ inputs.token }}" \
           "https://api.github.com/repos/${{ github.repository }}/releases/tags/$release_name")
         echo "Release API response: $release"
