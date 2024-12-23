@@ -1,0 +1,10 @@
+name: Generate Outputs
+description: Generates some output values
+runs:
+  using: 'composite'
+  steps:
+    - name: Generate Outputs
+      id: generate-outputs
+      run: |
+        echo "message=Hello, World!" >> $GITHUB_OUTPUT
+        echo "current_date=$(date)" >> $GITHUB_OUTPUT
