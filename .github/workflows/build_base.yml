@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Check release or create
         id: check-release-or-create
-        uses: ./.github/workflows/check_release_or_create.yml
+        uses: check_release_or_create.yml
 
   build-base-image:
     needs: [check-release-or-create, get-date-release-name]
