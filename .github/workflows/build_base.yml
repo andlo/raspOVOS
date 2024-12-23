@@ -37,7 +37,7 @@ jobs:
           script-path: ./base/build_base.sh
 
 
-upload-image:
+  upload-image:
     needs: [build-base-image, check-release-or-create, get-date-release-name]
     runs-on: ubuntu-latest
     steps:
