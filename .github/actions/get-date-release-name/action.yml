@@ -4,6 +4,7 @@ runs:
   using: 'composite'
   steps:
     - name: Get Current Date and Release Name
+      shell: bash
       id: current-date
       run: |
         current_date=$(date +'%Y-%m-%d')
