@@ -2,13 +2,6 @@ name: Get Date and Release Name
 description: Get current date and release name
 runs:
   using: 'composite'
-  outputs:
-    release_name:
-      description: "The release name"
-    cache_key:
-      description: "The cache key"
-    current_date:
-      description: "The current date"
   steps:
     - name: Get Current Date and Release Name
       id: current-date
