@@ -1,0 +1,20 @@
+name: "Check Release or Create"
+description: "Checks if a release exists or creates a new one."
+
+outputs:
+  release_id:
+    description: "The release ID."
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check release or create
+      id: check-release-or-create
+      run: |
+        # Implement your logic here
+        release_id="dummy_release_id"
+        echo "release_id=$release_id" >> $GITHUB_OUTPUT
+
+    - name: Print outputs
+      run: |
+        echo "release_id: ${{ steps.check-release-or-create.outputs.release_id }}"

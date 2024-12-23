@@ -1,0 +1,31 @@
+name: "Modify RPi Image"
+description: "Modifies the RPi image."
+
+inputs:
+  base-image-url:
+    description: "The URL of the base image."
+    required: true
+  release_name:
+    description: "The release name."
+    required: true
+  script-path:
+    description: "The path to the script."
+    required: true
+
+outputs:
+  image_path:
+    description: "The path to the modified image."
+
+runs:
+  using: "composite"
+  steps:
+    - name: Modify RPi image
+      id: modify-rpi-image
+      run: |
+        # Implement your logic here
+        image_path="dummy_image_path"
+        echo "image_path=$image_path" >> $GITHUB_OUTPUT
+
+    - name: Print outputs
+      run: |
+        echo "image_path: ${{ steps.modify-rpi-image.outputs.image_path }}"

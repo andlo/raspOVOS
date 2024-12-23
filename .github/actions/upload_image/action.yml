@@ -1,0 +1,24 @@
+name: "Upload Image"
+description: "Uploads the modified image."
+
+inputs:
+  image_path:
+    description: "The path to the modified image."
+    required: true
+  release_id:
+    description: "The release ID."
+    required: true
+  cache_key:
+    description: "The cache key."
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Upload image
+      id: upload-image
+      run: |
+        # Implement your logic here to upload the image
+        echo "Uploading image from path: ${{ inputs.image_path }}"
+        echo "Using release ID: ${{ inputs.release_id }}"
+        echo "Using cache key: ${{ inputs.cache_key }}"
