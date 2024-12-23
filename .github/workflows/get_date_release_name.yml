@@ -5,8 +5,10 @@ on:
     outputs:
       release_name:
         description: 'The generated release name'
+        value: ${{ steps.current-date.outputs.release_name }}
       cache_key:
         description: 'The generated cache key'
+        value: ${{ steps.current-date.outputs.cache_key }}
 
 jobs:
   get-date-release-name:
