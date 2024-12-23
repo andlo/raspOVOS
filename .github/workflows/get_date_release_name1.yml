@@ -2,13 +2,13 @@ name: Get Current Date and Release Name
 
 on:
   workflow_call:
-    outputs:
-      release_name:
-        description: 'The generated release name'
-        value: ${{ jobs.get-date-release-name.outputs.release_name }}
-      cache_key:
-        description: 'The generated cache key'
-        value: ${{ jobs.get-date-release-name.outputs.cache_key }}
+#    outputs:
+#      release_name:
+#        description: 'The generated release name'
+#        value: ${{ jobs.get-date-release-name.outputs.release_name }}
+#      cache_key:
+#        description: 'The generated cache key'
+#        value: ${{ jobs.get-date-release-name.outputs.cache_key }}
 
 jobs:
   get-date-release-name:
