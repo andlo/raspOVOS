@@ -42,7 +42,7 @@ jobs:
         run: |
           echo "cache_key: ${{ steps.current-date.outputs.cache_key }}"
           echo "release_name: ${{ steps.current-date.outputs.release_name }}"
-          echo "current_date: ${{ steps.current-date.outputs.current_date }}
+          echo "current_date: ${{ steps.current-date.outputs.current_date }}"
 
   # Stage 2: Build Image
   modify-rpi-image:
