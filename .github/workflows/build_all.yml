@@ -1,0 +1,60 @@
+name: Build Al Images
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/build_img_en.yml'
+      - 'build_raspOVOS_en.sh'
+      - 'intent_cache/en-US/**'
+
+jobs:
+  example-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get Date and Release Name
+        uses: ./.github/actions/get-date-release-name
+
+      - name: Check Release or Create
+        uses: ./.github/actions/check-release-or-create
+        with:
+          release_name: ${{ steps.current-date.outputs.release_name }}
+
+      - name: Build Base Image
+        uses: ./.github/actions/modify-rpi-image
+        with:
+          mycroft_config_files: ""
+          base-image-url: https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2024-11-19/2024-11-19-raspios-bookworm-arm64-lite.img.xz
+          image-path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
+          script-path: build_base.sh
+          current_date: ${{ steps.current-date.outputs.current_date }}
+          cache_key: ${{ steps.current-date.outputs.cache_key }}
+
+      - name: Upload Base Image
+        uses: ./.github/actions/upload-image
+        with:
+          image_path: ${{ steps.create-image.outputs.image-path }}
+          release_id: ${{ steps.get-release-id.outputs.release_id }}
+          cache_key: ${{ steps.current-date.outputs.cache_key }}
+  
+      - name: Build headles Image
+        uses: ./.github/actions/modify-rpi-image
+        with:
+          mycroft_config_files: "mycroft.conf"
+          base-image-url: ${{ release_path }}/raspOVOS-NO-OVOS-bookworm-arm64-lite.img.xz
+          image-path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
+          script-path: build_raspOVOS.sh
+          image_path: "raspOVOS-bookworm-arm64-lite.img"
+          current_date: ${{ steps.current-date.outputs.current_date }}
+          cache_key: ${{ steps.current-date.outputs.cache_key }}
+
+      - name: Upload Headles Image
+        uses: ./.github/actions/upload-image
+        with:
+          image_path: ${{ steps.create-image.outputs.image-path }}
+          release_id: ${{ steps.get-release-id.outputs.release_id }}
+          cache_key: ${{ steps.current-date.outputs.cache_key }}
+  

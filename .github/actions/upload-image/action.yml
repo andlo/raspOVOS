@@ -1,0 +1,24 @@
+name: Upload Image
+description: Upload image to GitHub release
+runs:
+  using: 'composite'
+  steps:
+    - name: Restore Cache for Image
+      uses: actions/cache@v4
+      with:
+        path: .
+        key: ${{ inputs.cache_key }}
+        fail-on-cache-miss: true
+    - name: Debug Cache Content
+      run: ls .
+    - name: Upload to release
+      uses: xresloader/upload-to-github-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        file: ${{ inputs.image_path }}
+        release_id: ${{ inputs.release_id }}
+        draft: false
+        overwrite: true
+        prerelease: false
+        verbose: true
