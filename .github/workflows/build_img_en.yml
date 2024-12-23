@@ -22,6 +22,28 @@ jobs:
         id: current-date
         run: |
           current_date=$(date +'%Y-%m-%d')
+          cache_key="raspOVOS-${{ github.run_id }}"
+          echo "release_name=$release_name" >> $GITHUB_OUTPUT
+          echo "cache_key=$cache_key" >> $GITHUB_OUTPUT
+
+      - name: Print outputs
+        shell: bash
+        run: |
+          echo "cache_key: ${{ steps.current-date.outputs.cache_key }}"
+          echo "release_name: ${{ steps.current-date.outputs.release_name }}"
+
+jobs:
+  # Stage 1: Get Current Date and Release Name
+  get-date-release-name:
+    runs-on: ubuntu-latest
+    outputs:
+      release_name: ${{ steps.current-date.outputs.release_name }}
+      cache_key: ${{ steps.current-date.outputs.cache_key }}
+    steps:
+      - name: Get Current Date and Release Name
+        id: current-date
+        run: |
+          current_date=$(date +'%Y-%m-%d')
           release_name="raspOVOS-english-bookworm-arm64-lite-${current_date}"
           cache_key="raspOVOS-${{ github.run_id }}"
           echo "release_name=$release_name" >> $GITHUB_OUTPUT
@@ -32,6 +54,8 @@ jobs:
         run: |
           echo "cache_key: ${{ steps.current-date.outputs.cache_key }}"
           echo "release_name: ${{ steps.current-date.outputs.release_name }}"
+
+
 
   # Stage 2: Build Image
   modify-rpi-image:
@@ -53,7 +77,7 @@ jobs:
           CONSTRAINTS: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
           MYCROFT_CONFIG_FILES: "mycroft.conf,mycroft_en.conf"
         with:
-          base-image-url: https://github.com/andlo/raspOVOS/releases/download/raspOVOS-bookworm-arm64-lite-2024-12-22/raspOVOS-bookworm-arm64-lite.img.xz
+          base-image-url: https://github.com/${{ github.repository }}/releases/download/raspOVOS-bookworm-arm64-lite-${{ needs.get-date-release-name.outputs.current_date }}/raspOVOS-bookworm-arm64-lite.img.xz
           image-path: raspOVOS-english-bookworm-arm64-lite.img
           compress-with-xz: true
           shrink: true
