@@ -1,7 +1,7 @@
 name: Build Base Image
 
 on:
-  workflow_call:
+  workflow_dispatch:
 
 jobs:
   get-date-release-name:
