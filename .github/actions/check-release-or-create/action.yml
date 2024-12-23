@@ -15,9 +15,12 @@ runs:
       shell: bash
       run: |
         release_name="${{ inputs.release_name }}"
+        echo "Checking release: $release_name"
         release=$(curl -s -H "Authorization: token ${{ inputs.token }}" \
           "https://api.github.com/repos/${{ github.repository }}/releases/tags/$release_name")
+        echo "Release API response: $release"
         release_id=$(echo $release | jq -r .id)
+        echo "Initial release_id: $release_id"
         if [[ "$release_id" == "null" ]]; then
           release=$(curl -s -X POST -H "Authorization: token ${{ inputs.token }}" \
             -H "Content-Type: application/json" \
@@ -25,6 +28,7 @@ runs:
             "https://api.github.com/repos/${{ github.repository }}/releases")
           release_id=$(echo $release | jq -r .id)
         fi
+        echo "Final release_id: $release_id"
         echo "release_id=$release_id" >> $GITHUB_OUTPUT
     - name: Print outputs
       shell: bash
