@@ -7,8 +7,6 @@ jobs:
   get-date-release-name:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
       - name: Get date release name
         id: get-date-release-name
         uses: ./.github/workflows/get_date_release_name.yml
