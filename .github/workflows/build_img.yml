@@ -18,7 +18,6 @@ on:
       - 'tuning/.logo.sh'
       - 'tuning/.bashrc'
       - 'tuning/.bash_aliases'
-      
 
 jobs:
   # Stage 1: Get Current Date and Release Name
@@ -27,7 +26,6 @@ jobs:
     outputs:
       release_name: ${{ steps.current-date.outputs.release_name }}
       cache_key: ${{ steps.current-date.outputs.cache_key }}
-      curent_date: ${{ steps.current-date.outputs.current_date }}
     steps:
       - name: Get Current Date and Release Name
         id: current-date
@@ -43,7 +41,6 @@ jobs:
         run: |
           echo "cache_key: ${{ steps.current-date.outputs.cache_key }}"
           echo "release_name: ${{ steps.current-date.outputs.release_name }}"
-          echo "current_date: ${{ steps.current-date.outputs.current_date }}"
 
   # Stage 2: Build Image
   modify-rpi-image:
@@ -64,14 +61,15 @@ jobs:
           HOSTNAME: "raspOVOS"
           CONSTRAINTS: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
         with:
-          base-image-url: https://github.com/${{ github.repository }}/releases/download/raspOVOS-bookworm-arm64-lite-/raspOVOS-NO-OVOS-bookworm-arm64-lite.img.x"
+          base-image-url: https://github.com/andlo/raspOVOS/releases/download/raspOVOS-bookworm-arm64-lite-2024-12-23/raspOVOS-NO-OVOS-bookworm-arm64-lite.img.xz
           image-path: raspOVOS-bookworm-arm64-lite.img
           compress-with-xz: true
           shrink: true
           cache: false
           mount-repository: true
           env-vars: USER,PASSWORD,HOSTNAME,CONSTRAINTS
-          script-path: build_raspOVOS.sh      - name: Print outputs
+          script-path: build_raspOVOS.sh
+      - name: Print outputs
         shell: bash
         run: |
           echo "image-path: ${{ steps.create-image.outputs.image-path }}"
@@ -102,7 +100,7 @@ jobs:
             release=$(curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
               -H "Content-Type: application/json" \
               -d "{\"tag_name\":\"$release_name\",\"name\":\"$release_name\",\"body\":\"Headless raspOVOS\"}" \
-              "https://api.github.com/repos/${{ github.repository }}/releases")0
+              "https://api.github.com/repos/${{ github.repository }}/releases")
             release_id=$(echo $release | jq -r .id)
           fi
           echo "release_id=$release_id" >> $GITHUB_OUTPUT
@@ -143,5 +141,3 @@ jobs:
           overwrite: true
           prerelease: false
           verbose: true
-
-  
