@@ -1,25 +1,20 @@
-name: Get Date and Release
-description: Get current date and release
+name: Get Date and Release Name
+description: Get current date and release name
 runs:
   using: 'composite'
   steps:
     - name: Get Current Date and Release Name
-      shell: bash
       id: current-date
       run: |
         current_date=$(date +'%Y-%m-%d')
         release_name="raspOVOS-arm64-lite-${current_date}"
-        release_path="https://github.com/${{ github.repository }}/releases/download/${release_name}"
         cache_key="raspOVOS-${{ github.run_id }}"
         echo "release_name=$release_name" >> $GITHUB_OUTPUT
         echo "cache_key=$cache_key" >> $GITHUB_OUTPUT
         echo "current_date=$current_date" >> $GITHUB_OUTPUT
-        echo "release_path=$release_path" >> $GITHUB_OUTPUT
-
     - name: Print outputs
       shell: bash
       run: |
         echo "cache_key: ${{ steps.current-date.outputs.cache_key }}"
         echo "release_name: ${{ steps.current-date.outputs.release_name }}"
         echo "current_date: ${{ steps.current-date.outputs.current_date }}"
-        echo "release_path: ${{ steps.current-date.outputs.release_path }}"

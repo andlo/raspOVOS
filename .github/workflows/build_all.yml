@@ -23,6 +23,7 @@ jobs:
         uses: ./.github/actions/get-date-release-name
 
       - name: Check Release or Create
+        id: check-release
         uses: ./.github/actions/check-release-or-create
         with:
           release_name: ${{ steps.get-date-release.outputs.release_name }}
@@ -42,7 +43,7 @@ jobs:
         uses: ./.github/actions/upload-image
         with:
           image_path: ${{ steps.create-image.outputs.image-path }}
-          release_id: ${{ steps.get-release-id.outputs.release_id }}
+          release_id: ${{ steps.check-release.outputs.release_id }}
           cache_key: ${{ steps.get-date-release.outputs.cache_key }}
   
       - name: Build Headless Image
@@ -59,5 +60,5 @@ jobs:
         uses: ./.github/actions/upload-image
         with:
           image_path: ${{ steps.create-image.outputs.image-path }}
-          release_id: ${{ steps.get-release-id.outputs.release_id }}
+          release_id: ${{ steps.check-release.outputs.release_id }}
           cache_key: ${{ steps.get-date-release.outputs.cache_key }}

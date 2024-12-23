@@ -11,8 +11,8 @@ runs:
   using: 'composite'
   steps:
     - name: Check if Release Exists
-      shell: bash
       id: get-release-id
+      shell: bash
       run: |
         release_name="${{ inputs.release_name }}"
         release=$(curl -s -H "Authorization: token ${{ inputs.token }}" \
