@@ -17,8 +17,6 @@ jobs:
     needs: get-date-release-name
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
       - name: Check release or create
         id: check-release-or-create
         uses: ./.github/workflows/check_release_or_create.yml
@@ -27,8 +25,6 @@ jobs:
     needs: [check-release-or-create, get-date-release-name]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
       - name: Modify RPi image
         id: build-base-image
         uses: ./.github/workflows/modify_rpi_image.yml
@@ -41,8 +37,6 @@ jobs:
     needs: [build-base-image, check-release-or-create, get-date-release-name]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
       - name: Upload image
         id: upload-image
         uses: ./.github/workflows/upload_image.yml
