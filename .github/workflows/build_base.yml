@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Get date release name
         id: get-date-release-name
-        uses: ./.github/workflows/get_date_release_name.yml
+        uses: ./get_date_release_name.yml
 
   check-release-or-create:
     needs: get-date-release-name
