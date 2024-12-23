@@ -15,6 +15,7 @@ jobs:
         uses: ./.github/actions/generate-outputs
 
       - name: Debug Outputs from Generate Outputs
+        needs: generate-outputs
         run: |
           echo "DEBUG: message: ${{ steps.generate-outputs.outputs.message }}"
           echo "DEBUG: current_date: ${{ steps.generate-outputs.outputs.current_date }}"
