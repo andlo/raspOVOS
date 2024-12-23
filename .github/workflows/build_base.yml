@@ -6,10 +6,10 @@ on:
     branches:
       - master
     paths:
-      #- '.github/workflows/build_base.yml'
-      #- 'build_base.sh'
-      #- 'tuning/**'
-      #- 'services/kdeconnect.service'
+      - '.github/workflows/build_base.yml'
+      - 'build_base.sh'
+      - 'tuning/**'
+      - 'services/kdeconnect.service'
       - 'services/wlan0-power.service'
       - 'packages/setup_pipewire.sh'
       - 'packages/setup_kdeconnect.sh'
