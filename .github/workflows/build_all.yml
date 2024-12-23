@@ -24,9 +24,9 @@ jobs:
 
       - name: Debug Outputs from Get Date and Release Name
         run: |
-          echo "release_name: ${{ steps.get-date-release.outputs.release_name }}"
-          echo "current_date: ${{ steps.get-date-release.outputs.current_date }}"
-          echo "cache_key: ${{ steps.get-date-release.outputs.cache_key }}"
+          echo "DEBUG: release_name: ${{ steps.get-date-release.outputs.release_name }}"
+          echo "DEBUG: current_date: ${{ steps.get-date-release.outputs.current_date }}"
+          echo "DEBUG: cache_key: ${{ steps.get-date-release.outputs.cache_key }}"
 
       - name: Check Release or Create
         id: check-release
@@ -51,7 +51,7 @@ jobs:
           image_path: ${{ steps.modify-rpi-image.outputs.image-path }}
           release_id: ${{ steps.check-release.outputs.release_id }}
           cache_key: ${{ steps.get-date-release.outputs.cache_key }}
-  
+
       - name: Build Headless Image
         uses: ./.github/actions/modify-rpi-image
         with:
