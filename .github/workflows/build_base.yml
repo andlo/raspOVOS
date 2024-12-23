@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Get date release name
         id: get-date-release-name
         uses: ./.github/workflows/get_date_release_name.yml
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Check release or create
         id: check-release-or-create
         uses: ./.github/workflows/check_release_or_create.yml
@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Modify RPi image
         id: build-base-image
         uses: ./.github/workflows/modify_rpi_image.yml

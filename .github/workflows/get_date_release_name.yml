@@ -17,9 +17,6 @@ jobs:
       release_name: ${{ steps.current-date.outputs.release_name }}
       cache_key: ${{ steps.current-date.outputs.cache_key }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: Get Current Date and Release Name
         id: current-date
         run: |
