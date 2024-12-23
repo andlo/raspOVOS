@@ -4,14 +4,18 @@ on:
   workflow_call:
     inputs:
       release_name:
+        type: string
         required: true
     outputs:
       release_id:
         description: 'ID of the created or existing release'
+        value: ""
 
 jobs:
   check-release-or-create:
     runs-on: ubuntu-latest
+    outputs:
+      release_id: ${{ steps.get-release-id.outputs.release_id }}
     steps:
       - name: Check if Release Exists
         id: get-release-id
@@ -36,5 +40,3 @@ jobs:
           if [[ $release_id == "null" ]]; then
             echo "Failed to create release. Response: $release"
             exit 1
-        outputs:
-          release_id: ${{ steps.get-release-id.outputs.release_id }}

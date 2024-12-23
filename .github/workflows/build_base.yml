@@ -40,7 +40,7 @@ jobs:
     needs: [build-base-image, check-release-or-create, get-date-release-name]
     uses: ./.github/workflows/upload_image.yml
     with:
-      image_path: ${{ needs.build-base-image.outputs.image_path }}
-      release_id: ${{ needs.check-release-or-create.outputs.release_id }}
-      cache_key: ${{ needs.check-release-or-create.outputs.cache_key }}
+      image_path: ${{ jobs.build-base-image.outputs.image_path }}
+      release_id: ${{ jobs.check-release-or-create.outputs.release_id }}
+      cache_key: ${{ jobs.check-release-or-create.outputs.cache_key }}
   

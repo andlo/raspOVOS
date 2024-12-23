@@ -5,10 +5,13 @@ on:
     inputs:
       image_path:
         required: true
+        type: string
       release_id:
         required: true
+        type: string
       cache_key:
         required: true
+        type: string
 
 jobs:
   upload-image:
