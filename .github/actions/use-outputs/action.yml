@@ -11,6 +11,7 @@ runs:
   using: 'composite'
   steps:
     - name: Display Outputs
+      shell: bash
       run: |
         echo "Message: ${{ inputs.message }}"
         echo "Current Date: ${{ inputs.current_date }}"

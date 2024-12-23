@@ -5,6 +5,7 @@ runs:
   steps:
     - name: Generate Outputs
       id: generate-outputs
+      shell: bash
       run: |
         echo "message=Hello, World!" >> $GITHUB_OUTPUT
         echo "current_date=$(date)" >> $GITHUB_OUTPUT
