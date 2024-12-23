@@ -15,11 +15,14 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Upload image
-      id: upload-image
-      shell: bash
-      run: |
-        # Implement your logic here to upload the image
-        echo "Uploading image from path: ${{ inputs.image_path }}"
-        echo "Using release ID: ${{ inputs.release_id }}"
-        echo "Using cache key: ${{ inputs.cache_key }}"
+    - name: Upload to release
+        uses: xresloader/upload-to-github-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: ${{ inputs.image_path }}
+          release_id: ${{ inputs.release_id }}
+          draft: false
+          overwrite: true
+          prerelease: false
+          verbose: true

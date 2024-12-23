@@ -24,6 +24,7 @@ jobs:
         uses: ./.github/actions/check_release_or_create
         with:
           release_name: ${{ steps.get-date-release-name.outputs.release_name }}
+          release_txt: "RaspOVOS multiple builds"
           cache_key: ${{ steps.get-date-release-name.outputs.cache_key }}
 
   build-base-image:
@@ -37,7 +38,7 @@ jobs:
         uses: ./.github/actions/modify_rpi_image
         with:
           base-image-url: https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2024-11-19/2024-11-19-raspios-bookworm-arm64-lite.img.xz
-          release_name: ${{ needs.get-date-release-name.outputs.release_name }}
+          image-path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
           script-path: ./base/build_base.sh
 
 

@@ -1,6 +1,12 @@
 name: "Check Release or Create"
 description: "Checks if a release exists or creates a new one."
-
+indputs:
+  release_name:
+    description: "The release name."
+    cache_key: 
+      description: "The cache key."
+  Release_txt:
+    description: "The release text."
 outputs:
   release_id:
     description: "The release ID."
@@ -11,12 +17,24 @@ runs:
     - name: Check release or create
       id: check-release-or-create
       shell: bash
-      run: |
-        # Implement your logic here
-        release_id="dummy_release_id"
-        echo "release_id=$release_id" >> $GITHUB_OUTPUT
-
+  steps:
+      - name: Check if Release Exists
+        id: get-release-id
+        shell: bash
+        run: |
+          release_name="${{ inputs.release_name }}"
+          release=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/tags/$release_name")
+          release_id=$(echo $release | jq -r .id)
+          if [[ "$release_id" == "null" ]]; then
+            release=$(curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d "{\"tag_name\":\"$release_name\",\"name\":\"$release_name\",\"body\":\"${{ inputs.Release_txt }}\"}" \
+              "https://api.github.com/repos/${{ github.repository }}/releases")
+            release_id=$(echo $release | jq -r .id)
+          fi
+          echo "release_id=$release_id" >> $GITHUB_OUTPUT
     - name: Print outputs
       shell: bash
       run: |
-        echo "release_id: ${{ steps.check-release-or-create.outputs.release_id }}"
+        echo "release_id: ${{ steps.get-release-id.outputs.release_id }}"
