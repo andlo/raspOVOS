@@ -11,7 +11,7 @@ on:
       - 'intent_cache/en-US/**'
 
 jobs:
-  example-job:
+  build-all-job:
     runs-on: ubuntu-latest
 
     steps:

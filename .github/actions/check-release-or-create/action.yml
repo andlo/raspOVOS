@@ -4,6 +4,7 @@ runs:
   using: 'composite'
   steps:
     - name: Check if Release Exists
+      shell: bash
       id: get-release-id
       run: |
         release_name="${{ inputs.release_name }}"
