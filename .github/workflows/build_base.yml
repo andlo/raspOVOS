@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Get date release name
         id: get-date-release-name
-        uses: ./get_date_release_name.yml
+        uses: ./.github/workflows/get_date_release_name1.yml
 
   check-release-or-create:
     needs: get-date-release-name
@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Check release or create
         id: check-release-or-create
-        uses: ./check_release_or_create.yml
+        uses: ./.github/workflows/check_release_or_create.yml
 
   build-base-image:
     needs: [check-release-or-create, get-date-release-name]
