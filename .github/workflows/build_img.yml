@@ -61,7 +61,7 @@ jobs:
           HOSTNAME: "raspOVOS"
           CONSTRAINTS: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
         with:
-          base-image-url: https://github.com/andlo/raspOVOS/releases/download/raspOVOS-NO-OVOS-bookworm-arm64-lite-2024-12-22/raspOVOS-NO-OVOS-bookworm-arm64-lite.img.xz
+          base-image-url: https://github.com/${{ github.repository }}/releases/download/raspOVOS-bookworm-arm64-lite-${current_date}/raspOVOS-NO-OVOS-bookworm-arm64-lite.img.xz
           image-path: raspOVOS-bookworm-arm64-lite.img
           compress-with-xz: true
           shrink: true
@@ -100,7 +100,7 @@ jobs:
             release=$(curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
               -H "Content-Type: application/json" \
               -d "{\"tag_name\":\"$release_name\",\"name\":\"$release_name\",\"body\":\"Headless raspOVOS\"}" \
-              "https://api.github.com/repos/${{ github.repository }}/releases")
+              "https://api.github.com/repos/${{ github.repository }}/releases")0
             release_id=$(echo $release | jq -r .id)
           fi
           echo "release_id=$release_id" >> $GITHUB_OUTPUT
