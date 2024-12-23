@@ -2,14 +2,10 @@ name: Generate Outputs
 description: Generates some output values
 runs:
   using: 'composite'
-  outputs:
-    message:
-      description: "The message to display"
-    current_date:
-      description: "The current date"
   steps:
     - name: Generate Outputs
       id: generate-outputs
+      shell: bash
       run: |
         message="Hello, World!"
         current_date=$(date)
