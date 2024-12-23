@@ -21,11 +21,13 @@ runs:
   steps:
     - name: Modify RPi image
       id: modify-rpi-image
+      shell: bash
       run: |
         # Implement your logic here
         image_path="dummy_image_path"
         echo "image_path=$image_path" >> $GITHUB_OUTPUT
 
     - name: Print outputs
+      shell: bash
       run: |
         echo "image_path: ${{ steps.modify-rpi-image.outputs.image_path }}"

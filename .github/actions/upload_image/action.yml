@@ -17,6 +17,7 @@ runs:
   steps:
     - name: Upload image
       id: upload-image
+      shell: bash
       run: |
         # Implement your logic here to upload the image
         echo "Uploading image from path: ${{ inputs.image_path }}"
