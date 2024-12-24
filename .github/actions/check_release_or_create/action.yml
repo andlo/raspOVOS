@@ -17,6 +17,14 @@ outputs:
 runs:
   using: "composite"
   steps:
+      - name: DEBUG
+        id: debug
+        shell: bash
+        run: |
+          echo "${{ inputs.release_name }}"
+          echo "${{ inputs.Release_txt }}"
+          echo "${{ inputs.GITHUB_TOKEN }}"
+          echo "${{ inputs.cache_key }}"
       - name: Check if Release Exists
         id: get-release-id
         shell: bash
