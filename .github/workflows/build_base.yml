@@ -2,7 +2,11 @@ name: Build Base Image
 
 on:
   workflow_dispatch:
-
+    paths:
+      - '.github/workflows/build_base.yml'
+      - '.github/workflows/modify-rpi-image.yml'
+      - '.github/workflows/create_release.yml'
+      - 'base/build_base.sh'
 jobs:
   create-release:
     runs-on: ubuntu-latest
