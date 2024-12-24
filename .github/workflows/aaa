@@ -1,0 +1,36 @@
+name: Build Base Image
+
+on:
+  workflow_dispatch:
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    outputs:
+      cache_key: ${{ steps.create-release.outputs.cache_key }}
+      release_name: ${{ steps.create-release.outputs.release_name }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Create Release
+        id: create-release
+        uses: ./.github/workflows/create_release.yml
+        with:
+          base_name: raspOVOS-bookworm-arm64-lite
+
+  build-base-image:
+    needs: [create-release]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Modify RPi image
+        id: build-base-image
+        uses: ./.github/workflows/modify-rpi-image.yml
+        with:
+          base-image-url: https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2024-11-19/2024-11-19-raspios-bookworm-arm64-lite.img.xz
+          release_name: ${{ needs.create-release.outputs.release_name }}
+          cache_key: ${{ needs.create-release.outputs.cache_key }}
+          image-name: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
+          script-path: ./base/build_base.sh 
+
