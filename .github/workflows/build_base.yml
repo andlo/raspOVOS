@@ -2,6 +2,7 @@ name: Build Base Image
 
 on:
   workflow_dispatch:
+
 jobs:
   create-release:
     uses: ./.github/workflows/create_release.yml
@@ -10,12 +11,11 @@ jobs:
 
   build-base-image:
     needs: create-release
-    uses: ./.github/workflows/modify-rpi-image.yml
+    uses: ./.github/workflows/modify_rpi_image.yml
     with:
       base-image-url: https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2024-11-19/2024-11-19-raspios-bookworm-arm64-lite.img.xz
       release_name: ${{ needs.create-release.outputs.release_name }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image-path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
-      script-path: ./base/build_base.sh 
-
+      script-path: ./base/build_base.sh
