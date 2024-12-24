@@ -36,6 +36,8 @@ jobs:
       image-size: ${{ steps.create-image.outputs.image-size }}
       image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Tune base Raspberry Pi OS Bookworm
         uses: TigreGotico/rpi-image-modifier@main
         id: create-image
@@ -68,6 +70,11 @@ jobs:
         with:
           path: .
           key: ${{ inputs.cache_key }}
+
+  uoload-to-release:
+    runs-on: ubuntu-latest
+    needs: [modify-rpi-image]
+    steps:
       - name: Upload to release
         uses: xresloader/upload-to-github-release@v1
         env:
