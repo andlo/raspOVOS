@@ -2,16 +2,13 @@ name: Build Base Image
 
 on:
   workflow_dispatch:
-    paths:
-      - '.github/workflows/build_base.yml'
-      - '.github/workflows/modify-rpi-image.yml'
-      - '.github/workflows/create_release.yml'
-      - 'base/build_base.sh'
 jobs:
   create-release:
     runs-on: ubuntu-latest
     outputs:
       cache_key: ${{ steps.create-release.outputs.cache_key }}
+      release_name: ${{ steps.create-release.outputs.release_name }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
