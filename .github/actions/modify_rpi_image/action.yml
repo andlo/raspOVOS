@@ -20,26 +20,26 @@ runs:
   using: "composite"
   steps:
     - name: Modify RPi image
-      id: modify-rpi-image
+        id: modify-rpi-image
     - name: Checkout repository
-      uses: actions/checkout@v4
+        uses: actions/checkout@v4
 
     - name: Tune base Raspberry Pi OS Bookworm
-      uses: TigreGotico/rpi-image-modifier@main
-      id: create-image
-      env:
-        USER: 'ovos'
-        PASSWORD: 'ovos'
-        HOSTNAME: "raspOVOS"
-      with:
-        base-image-url: ${{ inputs.base-image-url }}
-        image-path: ${{ inputs.image-path }} 
-        compress-with-xz: true
-        cache: false
-        shrink: true
-        mount-repository: true
-        env-vars: USER,PASSWORD,HOSTNAME
-        script-path: ${{ inputs.script-path }}
+        uses: TigreGotico/rpi-image-modifier@main
+        id: create-image
+        env:
+          USER: 'ovos'
+          PASSWORD: 'ovos'
+          HOSTNAME: "raspOVOS"
+        with:
+          base-image-url: ${{ inputs.base-image-url }}
+          image-path: ${{ inputs.image-path }} 
+          compress-with-xz: true
+          cache: false
+          shrink: true
+          mount-repository: true
+          env-vars: USER,PASSWORD,HOSTNAME
+          script-path: ${{ inputs.script-path }}
       shell: bash
       run: |
         echo "image-path=${{ steps.create-image.outputs.image-path }} >> $GITHUB_OUTPUT
