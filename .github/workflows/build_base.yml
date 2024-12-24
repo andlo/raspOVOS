@@ -9,6 +9,8 @@ jobs:
     outputs:
       cache_key: ${{ steps.create-release.outputs.cache_key }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Create Release
         id: create-release
         uses: ./.github/wprkflowa/create_release.yml
@@ -19,6 +21,8 @@ jobs:
     needs: [create-release]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Modify RPi image
         id: build-base-image
         uses: ./.github/workflows/modify-rpi-image.yml
