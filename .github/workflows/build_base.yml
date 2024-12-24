@@ -9,31 +9,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
       - name: Get Date Release Name
         id: get-date-release-name
         uses: ./.github/actions/get_date_release_name
-      
-  check-release-or-create:
-    needs: get-date-release-name
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+ 
       - name: Check release or create
         id: check-release-or-create
         uses: ./.github/actions/check_release_or_create
         with:
-          release_name: ${{ needs.get-date-release-name.outputs.release_name }}
+          release_name: ${{ steps.get-date-release-name.outputs.release_name }}
           release_txt: "RaspOVOS multiple builds"
-          cache_key: ${{ needs.get-date-release-name.outputs.cache_key }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PA_TOKEN }}
 
-  build-base-image:
-    needs: [check-release-or-create, get-date-release-name]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
       - name: Modify RPi image
         id: build-base-image
         uses: ./.github/actions/modify_rpi_image
@@ -42,17 +30,10 @@ jobs:
           image-path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
           script-path: ./base/build_base.sh
 
-
-  upload-image:
-    needs: [build-base-image, check-release-or-create, get-date-release-name]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
       - name: Upload image
         id: upload-image
         uses: ./.github/actions/upload_image
         with:
-          image_path: ${{ needs.build-base-image.outputs.image_path }}
-          release_id: ${{ needs.check-release-or-create.outputs.release_id }}
-          cache_key: ${{ needs.get-date-release-name.outputs.cache_key }}
+          image_path: ${{ steps.build-base-image.outputs.image_path }}
+          release_id: ${{ steps.check-release-or-create.outputs.release_id }}
+          cache_key: ${{ steps.get-date-release-name.outputs.cache_key }}
