@@ -68,6 +68,9 @@ jobs:
       - name: Print outputs
         shell: bash
         run: |
+          echo "image-path: ${{ steps.create-image.outputs.image-path }}" >> $GITHUB_ENV 
+          echo "image-size: ${{ steps.create-image.outputs.image-size }}" >> $GITHUB_ENV
+          echo "image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}" >> $GITHUB_ENV
           echo "image-path: ${{ steps.create-image.outputs.image-path }}" 
           echo "image-size: ${{ steps.create-image.outputs.image-size }}" 
           echo "image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}" 
