@@ -41,7 +41,7 @@ on:
         value: ${{ jobs.modify-rpi-image.outputs.image-path }}
       image-url:
         description: 'The URL of the modified image'
-        value: ${{ jobs.modify-rpi-image.outputs.image-path }}
+        value: ${{ jobs.modify-rpi-image.outputs.image-url }}
       image-size:
         description: 'The size of the modified image'
         value: ${{ jobs.modify-rpi-image.outputs.image-size }}

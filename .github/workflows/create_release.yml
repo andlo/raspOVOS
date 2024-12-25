@@ -51,7 +51,6 @@ jobs:
           cache_key="raspOVOS-${{ github.run_id }}"
           release_url="https://github.com/${{ github.repository }}/releases/download/${release_name}/"
           echo "release_url=$release_url" >> $GITHUB_ENV
-          echo "release_url: https://github.com/${{ github.repository }}/releases/download/${{ steps.current-date.outputs.release_name }}/" >> $GITHUB_ENV
           echo "cache_key=$cache_key" >> $GITHUB_ENV
 
       - name: Print outputs
