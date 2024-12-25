@@ -22,7 +22,7 @@ jobs:
       script-path: build_base.sh
       
   build-headles-image:
-    needs: create-release
+    needs: [create-release, build-base-image]
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
       base-image-url: ${{ needs.build-base-image.outputs.image-path }}
