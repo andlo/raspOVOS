@@ -68,9 +68,9 @@ jobs:
               "https://api.github.com/repos/${{ github.repository }}/releases")
           release_id=$(echo $release | jq -r .id)
           fi
-          echo "release_id=$release_id" >> $GITHUB_OUTPUT
+          echo "release_id=$release_id" 
 
       - name: Print outputs
         shell: bash
         run: |
-          echo "release_id: ${{ steps.get-release-id.outputs.release_id }}" >> $GITHUB_OUTPUT
+          echo "release_id: ${{ steps.get-release-id.outputs.release_id }}" 
