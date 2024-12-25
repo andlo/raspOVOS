@@ -3,6 +3,10 @@ name: Build Release
 on:
   workflow_dispatch:
 
+env:
+  mycroft-conig-path: ./mycroft-configs
+  language: en-us
+
 jobs:
   create-release:
     uses: ./.github/workflows/create_release.yml

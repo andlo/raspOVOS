@@ -43,6 +43,9 @@ on:
       image-path:
         description: 'The path to the modified image'
         value: ${{ jobs.modify-rpi-image.outputs.image-path }}
+      image-url:
+        description: 'The URL of the modified image'
+        value: ${{ inputs.release_url }}/${{ jobs.modify-rpi-image.outputs.image-path }}
       image-size:
         description: 'The size of the modified image'
         value: ${{ jobs.modify-rpi-image.outputs.image-size }}
@@ -52,20 +55,13 @@ on:
 jobs:
   modify-rpi-image:
     runs-on: ubuntu-latest
+    outputs:
+      image-path: ${{ steps.create-image.outputs.image-path }}
+      image-size: ${{ steps.create-image.outputs.image-size }}
+      image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: DEBUG
-        shell: bash
-        run: |
-          echo "base-image-url: ${{ inputs.base-image-url }}"
-          echo "release_id: ${{ inputs.release_id }}"
-          echo "release_url: ${{ inputs.release_url }}"
-          echo "cache_key: ${{ inputs.cache_key }}"
-          echo "image-path: ${{ inputs.image-path }}"
-          echo "script-path: ${{ inputs.script-path }}"
-          echo "mycroft-config-files: ${{ inputs.mycroft-config-files }}"
 
       - name: Check if Image is Already Uploaded
         id: check-image
@@ -104,13 +100,15 @@ jobs:
       - name: Print outputs
         shell: bash
         run: |
-          echo "image-path: ${{ steps.create-image.outputs.image_path }}"
-          echo "image-size: ${{ steps.create-image.outputs.image_size }}"
-          echo "image-sha256sum: ${{ steps.create-image.outputs.image_sha256sum }}"
+          echo "image-path: ${{ steps.create-image.outputs.image-path }}"
+          echo "image-size: ${{ steps.create-image.outputs.image-size }}"
+          echo "image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}"
 
       - name: Upload to release
+        if: ${{ steps.check-image.outputs.skip_create_image == 'false' }}
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ steps.set-output-image-path.outputs.image_path }}
+          files: ${{ steps.create-image.outputs.image-path }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
