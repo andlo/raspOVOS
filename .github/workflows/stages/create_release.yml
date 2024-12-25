@@ -56,6 +56,7 @@ jobs:
 
       - name: Check if Release Exists
         id: get-release-id
+        needs: current-date
         run: |
           release_name="${{ steps.current-date.outputs.release_name }}"
           release=$(curl -s -H "Authorization: token ${{ secrets.PA_TOKEN }}" \
@@ -68,7 +69,7 @@ jobs:
               "https://api.github.com/repos/${{ github.repository }}/releases")
           release_id=$(echo $release | jq -r .id)
           fi
-          echo "release_id=$release_id" 
+          echo "release_id=$release_id" >> $GITHUB_ENV
 
       - name: Print outputs
         shell: bash
