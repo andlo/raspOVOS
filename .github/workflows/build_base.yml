@@ -28,7 +28,28 @@ jobs:
       base-image-url: ${{ needs.build-base-image.outputs.image-path }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
-      image-path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
+      image-path: raspOVOS-bookworm-arm64-lite.img
       mycroft-config-files: mycroft.conf
-      script-path: build_base.sh
-    
+      script-path: build_raspOVOS.sh
+
+  build-gui-image:
+    needs: [create-release, build-base-image, build-headles-image]
+    uses: ./.github/workflows/modify_rpi_image.yml
+    with:
+      base-image-url: ${{ needs.build-base-image.outputs.image-path }}
+      release_id: ${{ needs.create-release.outputs.release_id }}
+      cache_key: ${{ needs.create-release.outputs.cache_key }}
+      image-path: raspOVOS-GUI-bookworm-arm64-lite.img
+      mycroft-config-files: mycroft.conf, mycroft-gui.conf
+      script-path: build_raspOVOS_gui.sh
+        
+  build-mk2-image:
+    needs: [create-release, build-base-image, build-headles-image, build-gui-image]
+    uses: ./.github/workflows/modify_rpi_image.yml
+    with:
+      base-image-url: ${{ needs.build-base-image.outputs.image-path }}
+      release_id: ${{ needs.create-release.outputs.release_id }}
+      cache_key: ${{ needs.create-release.outputs.cache_key }}
+      image-path: raspOVOS-mark2-bookworm-arm64-lite.img
+      mycroft-config-files: mycroft.conf, mycroft-gui.conf
+      script-path: build_raspOVOS_mk2.sh
