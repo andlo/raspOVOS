@@ -1,3 +1,10 @@
+# This reusable workflow creates or checks for a GitHub release.
+# It performs the following steps:
+# 1. Generates a release name and cache key based on the current date.
+# 2. Checks if a release with the generated name already exists.
+# 3. If the release does not exist, it creates a new release.
+# 4. Outputs the release ID for use in subsequent workflows.
+
 name: Create Release
 
 on:
