@@ -43,10 +43,8 @@ jobs:
       - name: Print outputs
         shell: bash
         run: |
-          echo "release_name: ${{ steps.current-date.outputs.release_name }}"
-          echo "cache_key: ${{ steps.current-date.outputs.cache_key }}"
-          echo "::set-output name=release_name::${{ steps.current-date.outputs.release_name }}"
-          echo "::set-output name=cache_key::${{ steps.current-date.outputs.cache_key }}"
+          echo "release_name: ${{ steps.current-date.outputs.release_name }}" >> $GITHUB_OUTPUT
+          echo "cache_key: ${{ steps.current-date.outputs.cache_key }}" >> $GITHUB_OUTPUT
 
   check-release-or-create:
     runs-on: ubuntu-latest
@@ -70,10 +68,9 @@ jobs:
               "https://api.github.com/repos/${{ github.repository }}/releases")
           release_id=$(echo $release | jq -r .id)
           fi
-          echo "release_id=$release_id" >> $GITHUB_ENV
+          echo "release_id=$release_id" >> $GITHUB_OUTPUT
 
       - name: Print outputs
         shell: bash
         run: |
-          echo "release_id: $release_id"
-          echo "::set-output name=release_id::$release_id"
+          echo "release_id: ${{ steps.get-release-id.outputs.release_id }}" >> $GITHUB_OUTPUT
