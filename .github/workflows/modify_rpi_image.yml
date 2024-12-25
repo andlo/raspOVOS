@@ -57,10 +57,13 @@ jobs:
           mount-repository: true
           env-vars: USER,PASSWORD,HOSTNAME
           script-path: ${{ inputs.script-path }}
-          run: |
-            echo "image-path: ${{ steps.create-image.outputs.image-path }}" >> $GITHUB_ENV
-            echo "image-size: ${{ steps.create-image.outputs.image-size }}" >> $GITHUB_ENV
-            echo "image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}" >> $GITHUB_ENV
+          run: echo "Image modification completed."
+
+      - name: Set environment variables
+        run: |
+          echo "image-path: ${{ steps.create-image.outputs.image-path }}" >> $GITHUB_ENV
+          echo "image-size: ${{ steps.create-image.outputs.image-size }}" >> $GITHUB_ENV
+          echo "image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}" >> $GITHUB_ENV
 
       - name: Save Image to Cache
         uses: actions/cache@v4
