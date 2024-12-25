@@ -8,21 +8,12 @@ jobs:
     uses: ./.github/workflows/create_release.yml
     with:
       base_name: raspOVOS-bookworm-arm64-lite
-      base_txt: "Raspberry Pi OS Bookworm Lite with OpenVoiceOS modifications"
-
-  debug:
-    runs-on: ubuntu-latest
-    needs: create-release
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: DEBUG
-        shell: bash
-        run: |
-          echo "release_name: ${{ needs.create-release.outputs.release_name }}"
-          echo "release_url: ${{ needs.create-release.outputs.release_url }}"
-          echo "release_id: ${{ needs.create-release.outputs.release_id }}"
-          echo "cache_key: ${{ needs.create-release.outputs.cache_key }}"      
+      base_txt: |
+        Raspberry Pi OS Bookworm Lite with OpenVoiceOS modifications
+        raspOVOS-NO-OVOS-bookworm-arm64-lite.img - Base image with no OVOS
+        raspOVOS-bookworm-arm64-lite.img - raspOVOS with OVOS
+        raspOVOS-GUI-bookworm-arm64-lite.img - raspOVOS with OVOS and GUI
+        raspOVOS-mark2-bookworm-arm64-lite.img - raspOVOS with OVOS and GUI for the Mark2
 
   build-base-image:
     needs: create-release
