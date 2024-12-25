@@ -39,6 +39,9 @@ on:
       image-path: 
         description: 'The path to the modified image'
         value: ${{ jobs.modify-rpi-image.outputs.image-path }}
+      image-url:
+        description: 'The URL of the modified image'
+        value: ${{ jobs.modify-rpi-image.outputs.image-path }}
       image-size:
         description: 'The size of the modified image'
         value: ${{ jobs.modify-rpi-image.outputs.image-size }}
@@ -50,6 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image-path: ${{ steps.create-image.outputs.image-path }}
+      image-url: ${{ steps.create-image.outputs.image-url }}
       image-size: ${{ steps.create-image.outputs.image-size }}
       image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}
     steps:
@@ -74,7 +78,7 @@ jobs:
           mount-repository: true
           env-vars: USER,PASSWORD,HOSTNAME,CONSTRAINTS,MYCROFT_CONFIG_FILES
           script-path: ${{ inputs.script-path }}
-
+          
       - name: Print outputs
         shell: bash
         run: |

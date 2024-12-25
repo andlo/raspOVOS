@@ -25,7 +25,7 @@ jobs:
     needs: [create-release, build-base-image]
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
-      base-image-url: ${{ needs.build-base-image.outputs.image-path }}
+      base-image-url: ${{ needs.build-base-image.outputs.image-url}} 
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image-path: raspOVOS-bookworm-arm64-lite.img
@@ -36,7 +36,7 @@ jobs:
     needs: [create-release, build-base-image, build-headles-image]
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
-      base-image-url: ${{ needs.build-base-image.outputs.image-path }}
+      base-image-url: ${{ needs.build-headles-image.outputs.image-image-url }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image-path: raspOVOS-GUI-bookworm-arm64-lite.img
@@ -47,7 +47,7 @@ jobs:
     needs: [create-release, build-base-image, build-headles-image, build-gui-image]
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
-      base-image-url: ${{ needs.build-base-image.outputs.image-path }}
+      base-image-url: ${{ needs.build-gui-image.outputs.image-url }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image-path: raspOVOS-mark2-bookworm-arm64-lite.img
