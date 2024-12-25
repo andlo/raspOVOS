@@ -66,7 +66,6 @@ jobs:
           echo "image-path: ${{ inputs.image-path }}"
           echo "script-path: ${{ inputs.script-path }}"
           echo "mycroft-config-files: ${{ inputs.mycroft-config-files }}"
-          echo "image_url: ${{ inputs.}}"
 
       - name: Check if Image is Already Uploaded
         id: check-image
@@ -75,11 +74,11 @@ jobs:
           response=$(curl --write-out '%{http_code}' --silent --output /dev/null "$image_url")
           if [ "$response" -eq 200 ]; then
             echo "Image already exists at $image_url"
-            echo "skip_create_image=true" >> $GITHUB_ENV
-            echo "image_url=$image_url" >> $GITHUB_ENV
+            echo "skip_create_image=true" >> $GITHUB_OUTPUT
+            echo "image_url=$image_url" >> $GITHUB_OUTPUT
           else
             echo "Image does not exist at $image_url"
-            echo "skip_create_image=false" >> $GITHUB_ENV
+            echo "skip_create_image=false" >> $GITHUB_OUTPUT
 
       - name: Tune base Raspberry Pi OS Bookworm
         if: ${{ steps.check-image.outputs.skip_create_image == 'false' }}
