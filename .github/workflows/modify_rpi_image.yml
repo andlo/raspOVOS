@@ -12,31 +12,42 @@ on:
   workflow_call:
     inputs:
       base-image-url:
+        description: 'The URL of the base image'
         required: true
         type: string
       release_id:
+        description: 'The release ID'
         required: true
         type: string
       cache_key:
+        description: 'The cache key'
         required: true
         type: string
       image-path:
+        description: 'The path to the modified image'
         required: true
         type: string
       script-path:
+        description: 'The path to the script'
         required: true
         type: string
       mycroft-config-files:
+        description: 'The Mycroft configuration files'
         required: true
         type: string
-
+    outputs:
+      image-path:
+        description: 'The path to the modified image'
+        value: ${{ jobs.modify-rpi-image.outputs.image-path }}
+      image-size:
+        description: 'The size of the modified image'
+        value: ${{ jobs.modify-rpi-image.outputs.image-size }}
+      image-sha256sum:
+        description: 'The sha256sum of the modified image'
+        value: ${{ jobs.modify-rpi-image.outputs.image-sha256sum }}
 jobs:
   modify-rpi-image:
     runs-on: ubuntu-latest
-    outputs:
-      image-path: ${{ steps.set-output-image-path.outputs.image_path }}
-      image-size: ${{ steps.set-output-image-size.outputs.image_size }}
-      image-sha256sum: ${{ steps.set-output-image-sha256sum.outputs.image_sha256sum }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -49,6 +60,7 @@ jobs:
           if [ "$response" -eq 200 ]; then
             echo "Image already exists at $image_url"
             echo "skip_create_image=true" >> $GITHUB_ENV
+            echo "image_url=$image_url" >> $GITHUB_ENV
           else
             echo "Image does not exist at $image_url"
             echo "skip_create_image=false" >> $GITHUB_ENV
@@ -73,28 +85,12 @@ jobs:
           env-vars: USER,PASSWORD,HOSTNAME,CONSTRAINTS,MYCROFT_CONFIG_FILES
           script-path: ${{ inputs.script-path }}
 
-      - name: Set output image path
-        id: set-output-image-path
-        run: echo "::set-output name=image_path::${{ inputs.image-path }}"
-
-      - name: Set output image size
-        id: set-output-image-size
-        run: |
-          image_size=$(du -sh ${{ inputs.image-path }} | cut -f1)
-          echo "::set-output name=image_size::$image_size"
-
-      - name: Set output image sha256sum
-        id: set-output-image-sha256sum
-        run: |
-          image_sha256sum=$(sha256sum ${{ inputs.image-path }} | cut -d ' ' -f 1)
-          echo "::set-output name=image_sha256sum::$image_sha256sum"
-
       - name: Print outputs
         shell: bash
         run: |
-          echo "image-path: ${{ steps.set-output-image-path.outputs.image_path }}"
-          echo "image-size: ${{ steps.set-output-image-size.outputs.image_size }}"
-          echo "image-sha256sum: ${{ steps.set-output-image-sha256sum.outputs.image_sha256sum }}"
+          echo "image-path: ${{ steps.create-image.outputs.image_path }}"
+          echo "image-size: ${{ steps.create-image.outputs.image_size }}"
+          echo "image-sha256sum: ${{ steps.create-image.outputs.image_sha256sum }}"
 
       - name: Upload to release
         uses: softprops/action-gh-release@v1
