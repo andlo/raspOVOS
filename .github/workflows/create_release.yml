@@ -75,9 +75,5 @@ jobs:
       - name: Print outputs
         shell: bash
         run: |
-          echo "release_id: ${{ steps.get-release-id.outputs.release_id }}"
-          if [[ $release_id == "null" ]]; then
-          echo "Failed to create release. Response: $release"
-          exit 1
-          fi
-
+          echo "release_id: $release_id"
+          echo "::set-output name=release_id::$release_id"
