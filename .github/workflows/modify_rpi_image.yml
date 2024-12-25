@@ -106,9 +106,14 @@ jobs:
 
       - name: Upload to release
         if: ${{ steps.check-image.outputs.skip_create_image == 'false' }}
-        uses: softprops/action-gh-release@v1
-        with:
-          files: ${{ steps.create-image.outputs.image-path }}
+        uses: xresloader/upload-to-github-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: ${{ steps.create-image.outputs.image-path }}
+          release_id: ${{ inputs.release_id }}
+          draft: false
+          overwrite: true
+          prerelease: false
+          verbose: true
         

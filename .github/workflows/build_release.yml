@@ -2,22 +2,13 @@ name: Build Release
 
 on:
   workflow_dispatch:
-
-env:
-  mycroft-conig-path: ./mycroft-configs
-  language: en-us
-
+    
 jobs:
   create-release:
     uses: ./.github/workflows/create_release.yml
     with:
       base_name: raspOVOS-bookworm-arm64-lite
-      base_txt: |
-        Raspberry Pi OS Bookworm Lite with OpenVoiceOS modifications
-        raspOVOS-NO-OVOS-bookworm-arm64-lite.img - Base image with no OVOS
-        raspOVOS-bookworm-arm64-lite.img - raspOVOS with OVOS
-        raspOVOS-GUI-bookworm-arm64-lite.img - raspOVOS with OVOS and GUI
-        raspOVOS-mark2-bookworm-arm64-lite.img - raspOVOS with OVOS and GUI for the Mark2
+      base_txt: Raspberry Pi OS Bookworm Lite with OpenVoiceOS modifications
 
   build-base-image:
     needs: create-release
