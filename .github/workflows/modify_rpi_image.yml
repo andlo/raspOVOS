@@ -66,6 +66,7 @@ jobs:
           echo "image-path: ${{ inputs.image-path }}"
           echo "script-path: ${{ inputs.script-path }}"
           echo "mycroft-config-files: ${{ inputs.mycroft-config-files }}"
+          echo "image_url: ${{ inputs.}}"
 
       - name: Check if Image is Already Uploaded
         id: check-image
