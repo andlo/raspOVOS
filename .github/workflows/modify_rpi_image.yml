@@ -22,7 +22,6 @@ on:
       mycroft-config-files:
         description: 'Mycroft configuration files'
         required: true
-        default: "mycroft.conf"
         type: string
       cache_key:
         description: 'The generated cache key'
@@ -55,7 +54,7 @@ jobs:
           cache: false
           shrink: true
           mount-repository: true
-          env-vars: USER,PASSWORD,HOSTNAME
+          env-vars: USER,PASSWORD,HOSTNAME,CONSTRAINTS,MYCROFT_CONFIG_FILES
           script-path: ${{ inputs.script-path }}
           run: echo "Image modification completed."
 
