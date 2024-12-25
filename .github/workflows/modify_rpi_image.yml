@@ -19,6 +19,10 @@ on:
         description: 'The release ID'
         required: true
         type: string
+      release_url:
+        description: 'The release URL'
+        required: true
+        type: string
       cache_key:
         description: 'The cache key'
         required: true
