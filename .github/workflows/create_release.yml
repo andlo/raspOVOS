@@ -59,6 +59,7 @@ jobs:
         shell: bash
         run: |
           echo "release_name: ${{ steps.current-date.outputs.release_name }}" 
+          echo "release_id: ${{ steps.get-release-id.outputs.release_id }}"
           echo "release_url: https://github.com/${{ github.repository }}/releases/download/${{ steps.current-date.outputs.release_name }}"
           echo "cache_key: ${{ steps.current-date.outputs.cache_key }}" 
 
