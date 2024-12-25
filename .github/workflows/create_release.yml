@@ -56,7 +56,6 @@ jobs:
 
       - name: Check if Release Exists
         id: get-release-id
-        needs: current-date
         run: |
           release_name="${{ steps.current-date.outputs.release_name }}"
           release=$(curl -s -H "Authorization: token ${{ secrets.PA_TOKEN }}" \
