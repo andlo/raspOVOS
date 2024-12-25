@@ -20,9 +20,10 @@ jobs:
       image-path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
       mycroft-config-files: mycroft.conf
       script-path: ./base/build_base.sh
+      
 
   build-headles-image:
-    needs: create-release
+    needs: [create-release, build-base-image]
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
       base-image-url: ${{ needs.build-base-image.outputs.image-path }} 
@@ -30,4 +31,4 @@ jobs:
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image-path: raspOVOS-bookworm-arm64-lite.img
       mycroft-config-files: mycroft.conf
-      script-path: ./base/build_base.sh
+      script-path: ./base/build_img.sh

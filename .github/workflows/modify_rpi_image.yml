@@ -57,6 +57,17 @@ jobs:
           mount-repository: true
           env-vars: USER,PASSWORD,HOSTNAME
           script-path: ${{ inputs.script-path }}
+          run: |
+            echo "image-path: ${{ steps.create-image.outputs.image-path }}" >> $GITHUB_ENV
+            echo "image-size: ${{ steps.create-image.outputs.image-size }}" >> $GITHUB_ENV
+            echo "image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}" >> $GITHUB_ENV
+
+      - name: Save Image to Cache
+        uses: actions/cache@v4
+        with:
+          path: .
+          key: ${{ inputs.cache_key }}
+    
 
       - name: Print outputs
         shell: bash
@@ -72,7 +83,7 @@ jobs:
       - name: Restore Cache for Image
         uses: actions/cache@v4
         with:
-          path: ${{ needs.modify-rpi-image.outputs.image-path }}
+          path: .
           key: ${{ inputs.cache_key }}
           fail-on-cache-miss: true
 
