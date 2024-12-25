@@ -19,6 +19,7 @@ jobs:
       - name: DEBUG
         shell: bash
         run: |
+          echo "release_name: ${{ needs.create-release.outputs.release_name }}"
           echo "release_url: ${{ needs.create-release.outputs.release_url }}"
           echo "release_id: ${{ needs.create-release.outputs.release_id }}"
           echo "cache_key: ${{ needs.create-release.outputs.cache_key }}"      
