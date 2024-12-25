@@ -8,6 +8,7 @@ jobs:
     uses: ./.github/workflows/create_release.yml
     with:
       base_name: raspOVOS-bookworm-arm64-lite
+      base_txt: "Raspberry Pi OS Bookworm Lite with OpenVoiceOS modifications"
 
   build-base-image:
     needs: create-release
