@@ -1,79 +1,60 @@
 # This reusable workflow modifies a Raspberry Pi OS image.
 # It performs the following steps:
 # 1. Checks out the repository.
-# 2. Tunes the base Raspberry Pi OS Bookworm image using the TigreGotico/rpi-image-modifier action.
-# 3. Saves the modified image to the cache.
+# 2. Checks if the image is already uploaded to GitHub.
+# 3. Tunes the base Raspberry Pi OS Bookworm image using the TigreGotico/rpi-image-modifier action.
 # 4. Prints the outputs, including the image path, image size, and image sha256sum.
 # 5. Uploads the modified image to a GitHub release.
 
-name: Modify RPI Image
+name: Modify RPi Image
 
 on:
   workflow_call:
     inputs:
-      image-path:
-        description: 'Name of the image to be created'
-        required: true
-        type: string
       base-image-url:
-        description: "The URL of the base image."
         required: true
         type: string
       release_id:
-        description: 'The release ID'
-        required: true
-        type: string
-      release_url:
-        description: 'The release URL'
-        required: true
-        type: string
-      script-path:
-        description: 'The path to the script to be executed'
-        required: true
-        type: string
-      mycroft-config-files:
-        description: 'Mycroft configuration files'
         required: true
         type: string
       cache_key:
-        description: 'The generated cache key'
         required: true
         type: string
-    outputs:
-      image-path: 
-        description: 'The path to the modified image'
-        value: ${{ jobs.modify-rpi-image.outputs.image-path }}
-      image-url:
-        description: 'The URL of the modified image'
-        value: "${{ inputs.release_url }}/${{ inputs.image-path }}"
-      image-size:
-        description: 'The size of the modified image'
-        value: ${{ jobs.modify-rpi-image.outputs.image-size }}
-      image-sha256sum:
-        description: 'The sha256sum of the modified image'
-        value: ${{ jobs.modify-rpi-image.outputs.image-sha256sum }}
+      image-path:
+        required: true
+        type: string
+      script-path:
+        required: true
+        type: string
+      mycroft-config-files:
+        required: true
+        type: string
+
 jobs:
   modify-rpi-image:
     runs-on: ubuntu-latest
     outputs:
-      image-path: ${{ steps.create-image.outputs.image-path }}
-      image-size: ${{ steps.create-image.outputs.image-size }}
-      image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}
+      image-path: ${{ steps.set-output-image-path.outputs.image_path }}
+      image-size: ${{ steps.set-output-image-size.outputs.image_size }}
+      image-sha256sum: ${{ steps.set-output-image-sha256sum.outputs.image_sha256sum }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: DEBUG
-        shell: bash
+
+      - name: Check if Image is Already Uploaded
+        id: check-image
         run: |
-          echo "image-path: ${{ inputs.image-path }}"
-          echo "base-image-url: ${{ inputs.base-image-url }}"
-          echo "release_id: ${{ inputs.release_id }}"
-          echo "release_url: ${{ inputs.release_url }}"
-          echo "script-path: ${{ inputs.script-path }}"
-          echo "mycroft-config-files: ${{ inputs.mycroft-config-files }}"
-          echo "cache_key: ${{ inputs.cache_key }}"
+          image_url="https://github.com/${{ github.repository }}/releases/download/${{ inputs.release_id }}/${{ inputs.image-path }}"
+          response=$(curl --write-out '%{http_code}' --silent --output /dev/null "$image_url")
+          if [ "$response" -eq 200 ]; then
+            echo "Image already exists at $image_url"
+            echo "skip_create_image=true" >> $GITHUB_ENV
+          else
+            echo "Image does not exist at $image_url"
+            echo "skip_create_image=false" >> $GITHUB_ENV
 
       - name: Tune base Raspberry Pi OS Bookworm
+        if: ${{ steps.check-image.outputs.skip_create_image == 'false' }}
         uses: TigreGotico/rpi-image-modifier@main
         id: create-image
         env:
@@ -82,9 +63,8 @@ jobs:
           HOSTNAME: "raspOVOS"
           CONSTRAINTS: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
           MYCROFT_CONFIG_FILES: ${{ inputs.mycroft-config-files }}
-
         with:
-          base-image-url: ${{ inputs.base-image-url }} 
+          base-image-url: ${{ inputs.base-image-url }}
           image-path: ${{ inputs.image-path }}
           compress-with-xz: true
           cache: false
@@ -93,22 +73,32 @@ jobs:
           env-vars: USER,PASSWORD,HOSTNAME,CONSTRAINTS,MYCROFT_CONFIG_FILES
           script-path: ${{ inputs.script-path }}
 
+      - name: Set output image path
+        id: set-output-image-path
+        run: echo "::set-output name=image_path::${{ inputs.image-path }}"
+
+      - name: Set output image size
+        id: set-output-image-size
+        run: |
+          image_size=$(du -sh ${{ inputs.image-path }} | cut -f1)
+          echo "::set-output name=image_size::$image_size"
+
+      - name: Set output image sha256sum
+        id: set-output-image-sha256sum
+        run: |
+          image_sha256sum=$(sha256sum ${{ inputs.image-path }} | cut -d ' ' -f 1)
+          echo "::set-output name=image_sha256sum::$image_sha256sum"
+
       - name: Print outputs
         shell: bash
         run: |
-          echo "image-path: ${{ steps.create-image.outputs.image-path }}" 
-          echo "image-url: ${{ inputs.release_url }}/${{ steps.create-image.outputs.image-path }}"
-          echo "image-size: ${{ steps.create-image.outputs.image-size }}" 
-          echo "image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}" 
-          
+          echo "image-path: ${{ steps.set-output-image-path.outputs.image_path }}"
+          echo "image-size: ${{ steps.set-output-image-size.outputs.image_size }}"
+          echo "image-sha256sum: ${{ steps.set-output-image-sha256sum.outputs.image_sha256sum }}"
+
       - name: Upload to release
-        uses: xresloader/upload-to-github-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.PA_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
-          file: ${{ steps.create-image.outputs.image-path }}
-          release_id: ${{ inputs.release_id }}
-          draft: false
-          overwrite: true
-          prerelease: false
-          verbose: true
+          files: ${{ steps.set-output-image-path.outputs.image_path }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
