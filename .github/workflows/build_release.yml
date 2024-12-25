@@ -15,6 +15,7 @@ jobs:
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
       base-image-url: https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2024-11-19/2024-11-19-raspios-bookworm-arm64-lite.img.xz
+      release_url: ${{ needs.create-release.outputs.release_url }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image-path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
@@ -26,6 +27,7 @@ jobs:
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
       base-image-url: ${{ needs.build-base-image.outputs.image-url}} 
+      release_url: ${{ needs.create-release.outputs.release_url }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image-path: raspOVOS-bookworm-arm64-lite.img
@@ -37,6 +39,7 @@ jobs:
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
       base-image-url: ${{ needs.build-headles-image.outputs.image-url }}
+      release_url: ${{ needs.create-release.outputs.release_url }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image-path: raspOVOS-GUI-bookworm-arm64-lite.img
