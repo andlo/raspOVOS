@@ -5,14 +5,14 @@ on:
 
 jobs:
   create-release:
-    uses: ./.github/workflows/create_release.yml
+    uses: ./.github/workflows/stages/create_release.yml
     with:
       base_name: raspOVOS-bookworm-arm64-lite
       base_txt: "Raspberry Pi OS Bookworm Lite with OpenVoiceOS modifications"
 
   build-base-image:
     needs: create-release
-    uses: ./.github/workflows/modify_rpi_image.yml
+    uses: ./.github/workflows/stages/modify_rpi_image.yml
     with:
       base-image-url: https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2024-11-19/2024-11-19-raspios-bookworm-arm64-lite.img.xz
       release_id: ${{ needs.create-release.outputs.release_id }}
