@@ -69,6 +69,16 @@ jobs:
     runs-on: ubuntu-latest
     needs: [modify-rpi-image]
     steps:
+      - name: Restore Cache for Image
+        uses: actions/cache@v4
+        with:
+          path: ${{ needs.modify-rpi-image.outputs.image-path }}
+          key: ${{ inputs.cache_key }}
+          fail-on-cache-miss: true
+
+      - name: Debug Cache Content
+        run: ls .
+
       - name: Upload to release
         uses: xresloader/upload-to-github-release@v1
         env:
