@@ -35,6 +35,16 @@ on:
         description: 'The generated cache key'
         required: true
         type: string
+    outputs:
+      image-path: 
+        description: 'The path to the modified image'
+        value: ${{ jobs.modify-rpi-image.outputs.image-path }}
+      image-size:
+        description: 'The size of the modified image'
+        value: ${{ jobs.modify-rpi-image.outputs.image-size }}
+      image-sha256sum:
+        description: 'The sha256sum of the modified image'
+        value: ${{ jobs.modify-rpi-image.outputs.image-sha256sum }}
 jobs:
   modify-rpi-image:
     runs-on: ubuntu-latest
