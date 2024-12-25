@@ -2,7 +2,7 @@ name: Build Release
 
 on:
   workflow_dispatch:
-    
+
 jobs:
   create-release:
     uses: ./.github/workflows/create_release.yml
@@ -43,7 +43,7 @@ jobs:
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image-path: raspOVOS-GUI-bookworm-arm64-lite.img
-      mycroft-config-files: mycroft.conf, mycroft-gui.conf
+      mycroft-config-files: mycroft.conf, mycroft_gui.conf
       script-path: build_raspOVOS_gui.sh
         
   build-mk2-image:
@@ -55,5 +55,5 @@ jobs:
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image-path: raspOVOS-mark2-bookworm-arm64-lite.img
-      mycroft-config-files: mycroft.conf, mycroft-gui.conf
+      mycroft-config-files: mycroft.conf, mycroft_gui.conf
       script-path: build_raspOVOS_mk2.sh
