@@ -47,7 +47,7 @@ jobs:
         id: current-date
         run: |
           current_date=$(date +'%Y-%m-%d')
-          release_name=" ${{ inputs.base_name }}-${current_date}"
+          release_name="${{ inputs.base_name }}-${current_date}"
           cache_key="raspOVOS-${{ github.run_id }}"
           release_url="https://github.com/${{ github.repository }}/releases/download/${release_name}"
           echo "release_name=$release_name" >> $GITHUB_OUTPUT
