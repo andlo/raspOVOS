@@ -57,12 +57,6 @@ jobs:
           env-vars: USER,PASSWORD,HOSTNAME,CONSTRAINTS,MYCROFT_CONFIG_FILES
           script-path: ${{ inputs.script-path }}
 
-      - name: Set environment variables
-        run: |
-          echo "image-path: ${{ steps.create-image.outputs.image-path }}" >> $GITHUB_ENV
-          echo "image-size: ${{ steps.create-image.outputs.image-size }}" >> $GITHUB_ENV
-          echo "image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}" >> $GITHUB_ENV
-
       - name: Save Image to Cache
         uses: actions/cache@v4
         with:
