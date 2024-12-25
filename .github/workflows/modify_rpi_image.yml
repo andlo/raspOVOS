@@ -56,7 +56,6 @@ jobs:
           mount-repository: true
           env-vars: USER,PASSWORD,HOSTNAME,CONSTRAINTS,MYCROFT_CONFIG_FILES
           script-path: ${{ inputs.script-path }}
-          run: echo "Image modification completed."
 
       - name: Set environment variables
         run: |
