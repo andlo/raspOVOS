@@ -62,6 +62,11 @@ jobs:
           echo "release_url: https://github.com/${{ github.repository }}/releases/download/${{ steps.current-date.outputs.release_name }}"
           echo "cache_key: ${{ steps.current-date.outputs.cache_key }}" 
 
+      - name: Debug Token Scopes
+        run: |
+          curl -H "Authorization: token ${{ secrets.PA_TOKEN }}" \
+          https://api.github.com/user | jq .
+      
       - name: Check if Release Exists
         id: get-release-id
         run: |
