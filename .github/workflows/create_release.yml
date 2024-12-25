@@ -49,7 +49,7 @@ jobs:
           current_date=$(date +'%Y-%m-%d')
           release_name=" ${{ inputs.base_name }}-${current_date}"
           cache_key="raspOVOS-${{ github.run_id }}"
-          release_url="https://github.com/${{ github.repository }}/releases/download/${release_name}/"
+          release_url="https://github.com/${{ github.repository }}/releases/download/${release_name}"
           echo "release_url=$release_url" >> $GITHUB_ENV
           echo "cache_key=$cache_key" >> $GITHUB_ENV
 
@@ -57,7 +57,7 @@ jobs:
         shell: bash
         run: |
           echo "release_name: ${{ steps.current-date.outputs.release_name }}" 
-          echo "release_url: https://github.com/${{ github.repository }}/releases/download/${{ steps.current-date.outputs.release_name }}/"
+          echo "release_url: https://github.com/${{ github.repository }}/releases/download/${{ steps.current-date.outputs.release_name }}"
           echo "cache_key: ${{ steps.current-date.outputs.cache_key }}" 
 
       - name: Check if Release Exists

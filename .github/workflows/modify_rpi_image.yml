@@ -23,6 +23,10 @@ on:
         description: 'The release ID'
         required: true
         type: string
+      release_url:
+        description: 'The release URL'
+        required: true
+        type: string
       script-path:
         description: 'The path to the script to be executed'
         required: true
@@ -41,7 +45,7 @@ on:
         value: ${{ jobs.modify-rpi-image.outputs.image-path }}
       image-url:
         description: 'The URL of the modified image'
-        value: ${{ jobs.modify-rpi-image.outputs.image-url }}
+        value: "${{ inputs.release_url }}/${{ inputs.image-path }}"
       image-size:
         description: 'The size of the modified image'
         value: ${{ jobs.modify-rpi-image.outputs.image-size }}
@@ -53,7 +57,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image-path: ${{ steps.create-image.outputs.image-path }}
-      image-url: ${{ steps.create-image.outputs.image-url }}
       image-size: ${{ steps.create-image.outputs.image-size }}
       image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}
     steps:
@@ -78,14 +81,15 @@ jobs:
           mount-repository: true
           env-vars: USER,PASSWORD,HOSTNAME,CONSTRAINTS,MYCROFT_CONFIG_FILES
           script-path: ${{ inputs.script-path }}
-          
+
       - name: Print outputs
         shell: bash
         run: |
           echo "image-path: ${{ steps.create-image.outputs.image-path }}" 
+          echo "image-url: ${{ inputs.release_url }}/${{ steps.create-image.outputs.image-path }}"
           echo "image-size: ${{ steps.create-image.outputs.image-size }}" 
           echo "image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}" 
-
+          
       - name: Upload to release
         uses: xresloader/upload-to-github-release@v1
         env:
