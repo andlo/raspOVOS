@@ -65,7 +65,7 @@ jobs:
       max-parallel: 1
     uses: ./.github/workflows/build_images.yml
     with:
-      base-image-url: ${{ needs.build-base-image.outputs.image-url }}
+      base_image_url: ${{ needs.build-base-image.outputs.image_url }}
       release_url: ${{ needs.create-release.outputs.release_url }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
