@@ -35,9 +35,8 @@ jobs:
         id: list-dirs
         run: |
           dirs=$(ls -d ./languages/*/)
-          dirs_json=$(echo $dirs | jq -R -s -c 'split(" ") | map(select(length > 0))')
+          dirs_json=$(echo $dirs | sed 's|./languages/||g' | sed 's|/||g' | jq -R -s -c 'split(" ") | map(select(length > 0))')
           echo "::set-output name=matrix::$dirs_json"
-
   build-images:
     needs: [create-release, build-base-image, list-languages]
     strategy:
