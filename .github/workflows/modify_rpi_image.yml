@@ -46,10 +46,10 @@ on:
     outputs:
       image_path:
         description: 'The path to the modified image'
-        value: $image_path
+        value: ${{ jobs.modify-rpi-image.outputs.image-path}}
       image_url:
         description: 'The URL of the modified image'
-        value:  $image_url
+        value:  ${{ jobs.modify-rpi-image.outputs.image-url }}
       
       image_size:
         description: 'The size of the modified image'
@@ -133,10 +133,10 @@ jobs:
   
       - name: Set output image URL and path
         if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
-        id: set-output-image-url-path
+        id: image-url-path
         run: |
-          echo "image_url=${{ inputs.release_url }}/${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
-            echo "image_path=${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
+          echo "image-url=${{ inputs.release_url }}/${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
+          echo "image-path=${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
 
       - name: Print outputs
         shell: bash
