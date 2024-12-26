@@ -83,7 +83,8 @@ jobs:
       - name: Check if Image is Already Uploaded
         id: check-image
         run: |
-          image_url="${{ inputs.release_url }}/${{ inputs.image-path }}"
+          image_url="${{ inputs.release_url }}/${{ inputs.image-path }}.xz"
+          echo "$image_url"
           response=$(curl --write-out '%{http_code}' --silent --output /dev/null "$image_url")
           if [ "$response" -eq 200 ]; then
             echo "Image already exists at $image_url"
