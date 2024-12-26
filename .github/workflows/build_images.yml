@@ -1,0 +1,68 @@
+name: Build Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      base-image-url:
+        description: 'The URL of the base image'
+        required: true
+        type: string
+      release_url:
+        description: 'The release URL'
+        required: true
+        type: string
+      release_id:
+        description: 'The release ID'
+        required: true
+        type: string
+      cache_key:
+        description: 'The cache key'
+        required: true
+        type: string
+      mycroft-config-files:
+        description: 'The Mycroft configuration files'
+        required: true
+        type: string
+      script-path:
+        description: 'The path to the script'
+        required: true
+        type: string
+      languages:
+        description: 'The languages'
+        required: true
+        type: string 
+jobs:
+  build-headles-image:
+    uses: ./.github/workflows/modify_rpi_image.yml
+    with:
+      base-image-url: ${{ inputs.base-image-url }} 
+      release_url: ${{ inputs.release_url}}
+      release_id: ${{ inputs.release_id }}
+      cache_key: ${{ inputs.cache_key }}
+      image-path: raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img
+      mycroft-config-files: ${{ inputs.mycroft-config-files }}
+      script-path: ${{ inputs.script-path }}
+
+#  build-gui-image:
+#    needs: [create-release, build-base-image, build-headles-image]
+#    uses: ./.github/workflows/modify_rpi_image.yml
+#    with:
+#      base-image-url: ${{ needs.build-headles-image.outputs.image-url }}
+#      release_url: ${{ needs.create-release.outputs.release_url }}
+#      release_id: ${{ needs.create-release.outputs.release_id }}
+#      cache_key: ${{ needs.create-release.outputs.cache_key }}
+#      image-path: raspOVOS-GUI-bookworm-arm64-lite.img
+#      mycroft-config-files: mycroft.conf, mycroft_gui.conf
+#      script-path: build_raspOVOS_gui.sh
+        
+#  build-mk2-image:
+#    needs: [create-release, build-base-image, build-headles-image, build-gui-image]
+#    uses: ./.github/workflows/modify_rpi_image.yml
+#    with:
+#      base-image-url: ${{ needs.build-gui-image.outputs.image-url }}
+#      release_url: ${{ needs.create-release.outputs.release_url }}
+#      release_id: ${{ needs.create-release.outputs.release_id }}
+#      cache_key: ${{ needs.create-release.outputs.cache_key }}
+#      image-path: raspOVOS-mark2-bookworm-arm64-lite.img
+#      mycroft-config-files: mycroft.conf, mycroft_gui.conf
+#      script-path: build_raspOVOS_mk2.sh

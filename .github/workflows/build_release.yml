@@ -38,20 +38,20 @@ jobs:
           dirs_json=$(echo $dirs | jq -R -s -c 'split(" ") | map(select(length > 0))')
           echo "::set-output name=matrix::$dirs_json"
 
-  build-language-images:
+  build-images:
     needs: [create-release, build-base-image, list-languages]
     strategy:
       matrix:
         language: ${{ fromJson(needs.list-languages.outputs.matrix) }}
-    uses: ./.github/workflows/modify_rpi_image.yml
+    uses: ./.github/workflows/build_images.yml
     with:
       base-image-url: ${{ needs.build-base-image.outputs.image-url }}
       release_url: ${{ needs.create-release.outputs.release_url }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
-      image-path: raspOVOS-${{ matrix.language }}-bookworm-arm64-lite.img
       mycroft-config-files: ./languages/default/mycroft.conf,./languages/${{ matrix.language }}/mycroft.conf
       script-path: ./languages/${{ matrix.language }}/build_raspOVOS.sh      
+      languages: ${{ matrix.language }}
 
 #  build-headles-image:
 #    needs: [create-release, build-base-image]
