@@ -48,7 +48,7 @@ jobs:
       release_url: ${{ needs.create-release.outputs.release_url }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
-      mycroft-config-files: ./languages/default/mycroft.conf,./languages/${{ matrix.language }}/mycroft.conf
+      mycroft-config-files: ./languages/default/mycroft.conf ./languages/${{ matrix.language }}/mycroft.conf
       script-path: ./languages/${{ matrix.language }}/build_raspOVOS.sh      
       languages: ${{ matrix.language }}
 
