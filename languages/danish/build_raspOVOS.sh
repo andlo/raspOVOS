@@ -11,9 +11,9 @@ source /home/$USER/.venvs/ovos/bin/activate
 echo "Setting up default wifi country..."
 /usr/bin/raspi-config nonint do_wifi_country DK
 
-echo "Caching pre-trained padatious intents..."
-mkdir -p /home/$USER/.local/share/mycroft/intent_cache
-cp -rv /mounted-github-repo/intent_cache/da-DK /home/$USER/.local/share/mycroft/intent_cache/
+#echo "Caching pre-trained padatious intents..."
+#mkdir -p /home/$USER/.local/share/mycroft/intent_cache
+#cp -rv /mounted-github-repo/intent_cache/da-DK /home/$USER/.local/share/mycroft/intent_cache/
 
 echo "Installing Piper TTS..."
 uv pip install --no-progress ovos-tts-plugin-piper -c $CONSTRAINTS
