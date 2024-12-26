@@ -67,7 +67,7 @@ jobs:
       image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4{{ jobs.modify-rpi-image.outputs.image-path }}
+        uses: actions/checkout@v4
 
       - name: Check if Required Files Exist
         id: check-files
