@@ -96,7 +96,7 @@ jobs:
       - name: Check if Image is Already Uploaded
         id: check-image
         run: |
-          image_url=${{ inputs.release_url }}/${{ inputs.image-path }}
+          image_url=${{ inputs.release_url }}/${{ inputs.image-path }}.xz
           echo "Checking URL: $image_url"
           response=$(curl -L --write-out '%{http_code}' --silent --output /dev/null "$image_url")
           echo "HTTP response code: $response"
