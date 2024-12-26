@@ -23,6 +23,7 @@ jobs:
       script-path: build_base.sh
 
   list-languages:
+    needs: [create-release, build-base-image]
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
