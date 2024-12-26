@@ -84,11 +84,19 @@ jobs:
             done
             echo "skip_steps=false" >> $GITHUB_OUTPUT
           fi
-      
+      - name: Check if Base Image URL Ends with .xz
+        id: check-base-image-url
+        run: |
+          base_image_url="${{ inputs.base-image-url }}"
+          if [[ "$base_image_url" != *.xz ]]; then
+            base_image_url="${base_image_url}.xz"
+          fi
+          echo "base_image_url=$base_image_url" >> $GITHUB_ENV
+
       - name: Check if Image is Already Uploaded
         id: check-image
         run: |
-          image_url="${{ inputs.release_url }}/${{ inputs.image-path }}.xz"
+          image_url=$base_image_url
           echo "Checking URL: $image_url"
           response=$(curl -L --write-out '%{http_code}' --silent --output /dev/null "$image_url")
           echo "HTTP response code: $response"
