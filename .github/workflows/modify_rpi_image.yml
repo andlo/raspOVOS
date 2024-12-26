@@ -46,12 +46,10 @@ on:
     outputs:
       image-path:
         description: 'The path to the modified image'
-        value: $image-path
-#        value: ${{ jobs.modify-rpi-image.outputs.image-path }}
+        value: ${{ jobs.modify-rpi-image.outputs.image-path }}
       image-url:
         description: 'The URL of the modified image'
-        value: $image-url
-#        value: ${{ inputs.release_url }}/${{ jobs.modify-rpi-image.outputs.image-path }}
+        value: ${{ inputs.release_url }}/${{ jobs.modify-rpi-image.outputs.image-path }}
       image-size:
         description: 'The size of the modified image'
         value: ${{ jobs.modify-rpi-image.outputs.image-size }}
@@ -98,6 +96,7 @@ jobs:
             echo "Image already exists at $image_url"
             echo "skip_create_image=true" >> $GITHUB_OUTPUT
             echo "image_url=$image_url" >> $GITHUB_OUTPUT
+            echo "image_path=${{ inputs.image-path }}.xz" >> $GITHUB_OUTPUT
           else
             echo "Image does not exist at $image_url"
             echo "skip_create_image=false" >> $GITHUB_OUTPUT
@@ -123,7 +122,7 @@ jobs:
           mount-repository: true
           env-vars: USER,PASSWORD,HOSTNAME,CONSTRAINTS,MYCROFT_CONFIG_FILES
           script-path: ${{ inputs.script-path }}
-
+  
       - name: Print outputs
         shell: bash
         run: |
