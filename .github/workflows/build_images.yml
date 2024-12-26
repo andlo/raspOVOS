@@ -42,9 +42,6 @@ jobs:
           echo "release_id: ${{ inputs.release_id }}"
           echo "cache_key: ${{ inputs.cache_key }}"
           echo "image-path: raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img"
-          echo "mycroft-config-files: ${{ inputs.mycroft_config_files }}"
-          echo "script-path: ${{ inputs.script_path }}"
-          echo "constraints: ${{ inputs.constraints }}"
           echo "languages: ${{ inputs.languages }}"
 
   build-headles-image:
