@@ -1,3 +1,11 @@
+# This reusable workflow builds images for different languages.
+# It performs the following steps:
+# 1. Accepts inputs for the base image URL, release URL, release ID, cache key, Mycroft configuration files, script path, and languages.
+# 2. Calls the modify_rpi_image.yml workflow to build headless images for each specified language.
+# 3. Calls the modify_rpi_image.yml workflow to build GUI images for each specified language.
+# 4. Calls the modify_rpi_image.yml workflow to build Mark II images for each specified language.
+# 5. Outputs the image URL for each image.
+
 name: Build Images
 
 on:
@@ -35,11 +43,11 @@ jobs:
   build-headles-image:
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
-      base-image-url: ${{ inputs.base-image-url }}.xz 
+      base-image-url: ${{ inputs.base-image-url }} 
       release_url: ${{ inputs.release_url}}
       release_id: ${{ inputs.release_id }}
       cache_key: ${{ inputs.cache_key }}
-      image-path: "raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img"
+      image-path: "raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img.xz"
       mycroft-config-files: ${{ inputs.mycroft-config-files }}
       script-path: ${{ inputs.script-path }}
 

@@ -18,7 +18,7 @@ jobs:
       release_url: ${{ needs.create-release.outputs.release_url }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
-      image-path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
+      image-path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img.xz
       mycroft-config-files: mycroft.conf
       script-path: build_base.sh
 
