@@ -85,8 +85,8 @@ jobs:
             echo "skip_steps=false" >> $GITHUB_OUTPUT
           fi
       
-      - name: Check if Image is Already Uploaded
-        id: check-image
+     # - name: Check if Image is Already Uploaded
+     #   id: check-image
         #run: |
         #  image_url="${{ inputs.release_url }}/${{ inputs.image-path }}".xz
         #  echo "Checking URL: $image_url"
