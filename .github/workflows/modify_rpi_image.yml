@@ -46,10 +46,12 @@ on:
     outputs:
       image-path:
         description: 'The path to the modified image'
-        value: ${{ jobs.modify-rpi-image.outputs.image-path }}
+        value: $image-path
+#        value: ${{ jobs.modify-rpi-image.outputs.image-path }}
       image-url:
         description: 'The URL of the modified image'
-        value: ${{ inputs.release_url }}/${{ jobs.modify-rpi-image.outputs.image-path }}
+        value: $image-url
+#        value: ${{ inputs.release_url }}/${{ jobs.modify-rpi-image.outputs.image-path }}
       image-size:
         description: 'The size of the modified image'
         value: ${{ jobs.modify-rpi-image.outputs.image-size }}
@@ -65,7 +67,7 @@ jobs:
       image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4{{ jobs.modify-rpi-image.outputs.image-path }}
 
       - name: Check if Required Files Exist
         id: check-files
@@ -85,25 +87,24 @@ jobs:
             echo "skip_steps=false" >> $GITHUB_OUTPUT
           fi
       
-     # - name: Check if Image is Already Uploaded
-     #   id: check-image
-        #run: |
-        #  image_url="${{ inputs.release_url }}/${{ inputs.image-path }}".xz
-        #  echo "Checking URL: $image_url"
-        #  response=$(curl -L --write-out '%{http_code}' --silent --output /dev/null "$image_url")
-        #  echo "HTTP response code: $response"
-        #  if [ "$response" -eq 200 ]; then
-        #    echo "Image already exists at $image_url"
-        #    echo "skip_create_image=true" >> $GITHUB_OUTPUT
-        #    echo "image_url=$image_url" >> $GITHUB_OUTPUT
-        #  else
-        #    echo "Image does not exist at $image_url"
-        #    echo "skip_create_image=false" >> $GITHUB_OUTPUT
-        #  fi
+      - name: Check if Image is Already Uploaded
+        id: check-image
+        run: |
+          image_url="${{ inputs.release_url }}/${{ inputs.image-path }}.xz"
+          echo "Checking URL: $image_url"
+          response=$(curl -L --write-out '%{http_code}' --silent --output /dev/null "$image_url")
+          echo "HTTP response code: $response"
+          if [ "$response" -eq 200 ]; then
+            echo "Image already exists at $image_url"
+            echo "skip_create_image=true" >> $GITHUB_OUTPUT
+            echo "image_url=$image_url" >> $GITHUB_OUTPUT
+          else
+            echo "Image does not exist at $image_url"
+            echo "skip_create_image=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Tune base Raspberry Pi OS Bookworm
-        # if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
-        if: ${{ steps.check-files.outputs.skip_steps == 'false' }}
+        if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
         continue-on-error: true
         uses: TigreGotico/rpi-image-modifier@main
         id: create-image
@@ -129,10 +130,12 @@ jobs:
           echo "image-path: ${{ steps.create-image.outputs.image-path }}"
           echo "image-size: ${{ steps.create-image.outputs.image-size }}"
           echo "image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}"
+          echo "image-path=${{ steps.create-image.outputs.image-path }}" >> $GITHUB_OUTPUT
+          echo "image-size=${{ steps.create-image.outputs.image-size }}" >> $GITHUB_OUTPUT
+          echo "image-sha256sum=${{ steps.create-image.outputs.image-sha256sum }}" >> $GITHUB_OUTPUT
 
       - name: Upload to release
-        # if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
-        if: ${{ steps.check-files.outputs.skip_steps == 'false' }}
+        if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
         uses: xresloader/upload-to-github-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
