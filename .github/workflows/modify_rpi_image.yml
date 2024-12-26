@@ -104,6 +104,7 @@ jobs:
       - name: Tune base Raspberry Pi OS Bookworm
         # if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
         if: ${{ steps.check-files.outputs.skip_steps == 'false' }}
+        continue-on-error: true
         uses: TigreGotico/rpi-image-modifier@main
         id: create-image
         env:
