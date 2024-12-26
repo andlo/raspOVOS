@@ -35,7 +35,7 @@ jobs:
   build-headles-image:
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
-      base-image-url: ${{ inputs.base-image-url }} 
+      base-image-url: ${{ inputs.base-image-url }}.xz 
       release_url: ${{ inputs.release_url}}
       release_id: ${{ inputs.release_id }}
       cache_key: ${{ inputs.cache_key }}
