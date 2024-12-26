@@ -32,7 +32,7 @@ jobs:
     needs: [create-release, build-no-ovos-image]
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
-      base_image_url: ${{ needs.build-no-ovos-image.outputs.image_url }}/${{ needs.build-no-ovos-image.outputs.image_path }}
+      base_image_url: ${{ needs.build-no-ovos-image.outputs.image_url }}
       release_url: ${{ needs.create-release.outputs.release_url }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
@@ -65,7 +65,7 @@ jobs:
       max-parallel: 1
     uses: ./.github/workflows/build_images.yml
     with:
-      base_image_url: ${{ needs.build-base-image.outputs.image_url }}/${{ needs.build-no-ovos-image.outputs.image_path }}
+      base_image_url: ${{ needs.build-base-image.outputs.image_url }}
       release_url: ${{ needs.create-release.outputs.release_url }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
