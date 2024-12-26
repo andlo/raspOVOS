@@ -66,7 +66,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+      - name: Debug - Print Input Variables
+        run: |
+          echo "base-image-url: ${{ inputs.base-image-url }}"
+          echo "release_id: ${{ inputs.release_id }}"
+          echo "release_url: ${{ inputs.release_url }}"
+          echo "cache_key: ${{ inputs.cache_key }}"
+          echo "image-path: ${{ inputs.image-path }}"
+          echo "script-path: ${{ inputs.script-path }}"
+          echo "mycroft-config-files: ${{ inputs.mycroft-config-files }}"
+          echo "constraints: ${{ inputs.constraints }}"
+      
       - name: Check if Required Files Exist
         id: check-files
         run: |
