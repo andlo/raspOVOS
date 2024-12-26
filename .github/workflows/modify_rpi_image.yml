@@ -46,10 +46,11 @@ on:
     outputs:
       image_path:
         description: 'The path to the modified image'
-        value: ${{ jobs.modify-rpi-image.outputs.image-path || inputs.image_path + '.xz' }}
+        value: $image_path
       image_url:
         description: 'The URL of the modified image'
-        value: ${{ jobs.modify-rpi-image.outputs.image-url || format('{0}/{1}.xz', inputs.release_url, inputs.image_path) }}
+        value:  $image_url
+      
       image_size:
         description: 'The size of the modified image'
         value: ${{ jobs.modify-rpi-image.outputs.image-size }}
@@ -129,15 +130,19 @@ jobs:
           env-vars: USER,PASSWORD,HOSTNAME,CONSTRAINTS,MYCROFT_CONFIG_FILES
           script-path: ${{ inputs.script_path }}
   
+      - name: Set output image URL and path
+        if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
+        id: set-output-image-url-path
+        run: |
+          echo "image_url=${{ inputs.release_url }}/${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
+            echo "image_path=${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
+
       - name: Print outputs
         shell: bash
         run: |
           echo "image-path: ${{ steps.create-image.outputs.image-path }}"
           echo "image-size: ${{ steps.create-image.outputs.image-size }}"
           echo "image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}"
-          echo "image_path=${{ steps.create-image.outputs.image-path }}" >> $GITHUB_OUTPUT
-          echo "image_size=${{ steps.create-image.outputs.image-size }}" >> $GITHUB_OUTPUT
-          echo "image_sha256sum=${{ steps.create-image.outputs.image-sha256sum }}" >> $GITHUB_OUTPUT
 
       - name: Upload to release
         if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
