@@ -41,17 +41,17 @@ jobs:
       script_path: ./languages/default/build_raspOVOS.sh
       constraints: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
 
-  build-gui-image:
-    needs: [create-release, build-no-ovos-image, build-base-image] 
-    uses: ./.github/workflows/modify_rpi_image.yml
-    with:
-      base_image_url: ${{ needs.build-base-image.outputs.image-url }}
-      release_url: ${{ needs.create-release.outputs.release_url }}
-      release_id: ${{ needs.create-release.outputs.release_id }}
-      cache_key: ${{ needs.create-release.outputs.cache_key }}
-      imagepath: raspOVOS-GUI-bookworm-arm64-lite.img
-      mycroft_config_files: ./languages/default/mycroft.conf, /languages/default/mycroft_gui.conf
-      script_path: /languages/default/build_raspOVOS_gui.sh
+  #build-gui-image:
+  #  needs: [create-release, build-no-ovos-image, build-base-image] 
+  #  uses: ./.github/workflows/modify_rpi_image.yml
+  #  with:
+  #    base_image_url: ${{ needs.build-base-image.outputs.image-url }}
+  #    release_url: ${{ needs.create-release.outputs.release_url }}
+  #    release_id: ${{ needs.create-release.outputs.release_id }}
+  #    cache_key: ${{ needs.create-release.outputs.cache_key }}
+  #    imagepath: raspOVOS-GUI-bookworm-arm64-lite.img
+  #    mycroft_config_files: ./languages/default/mycroft.conf, /languages/default/mycroft_gui.conf
+  #    script_path: /languages/default/build_raspOVOS_gui.sh
     
 
   list-languages:
