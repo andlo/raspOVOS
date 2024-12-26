@@ -85,7 +85,7 @@ jobs:
         run: |
           image_url="${{ inputs.release_url }}/${{ inputs.image-path }}.xz"
           echo "Checking URL: $image_url"
-          response=$(curl --write-out '%{http_code}' --silent --output /dev/null "$image_url")
+          response=$(curl -L --write-out '%{http_code}' --silent --output /dev/null "$image_url")
           echo "HTTP response code: $response"
           if [ "$response" -eq 200 ]; then
             echo "Image already exists at $image_url"
