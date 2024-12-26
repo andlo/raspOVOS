@@ -70,7 +70,8 @@ jobs:
             echo "Script file ${{ inputs.script-path }} does not exist."
             echo "skip_steps=true" >> $GITHUB_OUTPUT
           else
-            for config_file in ${{ inputs.mycroft-config-files }}; do
+            IFS=',' read -r -a file_array <<< "${{ inputs.mycroft-config-files }}"
+            for config_file in "${file_array[@]}"; do
               if [ ! -f "$config_file" ]; then
                 echo "Mycroft config file $config_file does not exist."
                 echo "skip_steps=true" >> $GITHUB_OUTPUT
