@@ -11,7 +11,7 @@ name: Modify RPi Image
 on:
   workflow_call:
     inputs:
-      base-image-url:
+      base_image_url:
         description: 'The URL of the base image'
         required: true
         type: string
@@ -27,15 +27,15 @@ on:
         description: 'The cache key'
         required: true
         type: string
-      image-path:
+      image_path:
         description: 'The path to the modified image'
         required: true
         type: string
-      script-path:
+      script_path:
         description: 'The path to the script'
         required: true
         type: string
-      mycroft-config-files:
+      mycroft_config_files:
         description: 'The Mycroft configuration files'
         required: false
         type: string
@@ -44,16 +44,16 @@ on:
         required: false
         type: string
     outputs:
-      image-path:
+      image_path:
         description: 'The path to the modified image'
         value: ${{ jobs.modify-rpi-image.outputs.image-path }}
-      image-url:
+      image_url:
         description: 'The URL of the modified image'
         value: ${{ inputs.release_url }}/${{ jobs.modify-rpi-image.outputs.image-path }}
-      image-size:
+      image_size:
         description: 'The size of the modified image'
         value: ${{ jobs.modify-rpi-image.outputs.image-size }}
-      image-sha256sum:
+      image_sha256sum:
         description: 'The sha256sum of the modified image'
         value: ${{ jobs.modify-rpi-image.outputs.image-sha256sum }}
 jobs:
@@ -68,23 +68,23 @@ jobs:
         uses: actions/checkout@v4
       - name: Debug - Print Input Variables
         run: |
-          echo "base-image-url: ${{ inputs.base-image-url }}"
+          echo "base_image_url: ${{ inputs.base_image_url }}"
           echo "release_id: ${{ inputs.release_id }}"
           echo "release_url: ${{ inputs.release_url }}"
           echo "cache_key: ${{ inputs.cache_key }}"
-          echo "image-path: ${{ inputs.image-path }}"
-          echo "script-path: ${{ inputs.script-path }}"
-          echo "mycroft-config-files: ${{ inputs.mycroft-config-files }}"
+          echo "image_path: ${{ inputs.image_path }}"
+          echo "script_path: ${{ inputs.script_path }}"
+          echo "mycroft_config_files: ${{ inputs.mycroft_config_files }}"
           echo "constraints: ${{ inputs.constraints }}"
       
       - name: Check if Required Files Exist
         id: check-files
         run: |
-          if [ ! -f "${{ inputs.script-path }}" ]; then
-            echo "Script file ${{ inputs.script-path }} does not exist."
+          if [ ! -f "${{ inputs.script_path }}" ]; then
+            echo "Script file ${{ inputs.script_path }} does not exist."
             echo "skip_steps=true" >> $GITHUB_OUTPUT
           else
-            IFS=',' read -r -a file_array <<< "${{ inputs.mycroft-config-files }}"
+            IFS=',' read -r -a file_array <<< "${{ inputs.mycroft_config_files }}"
             for config_file in "${file_array[@]}"; do
               if [ ! -f "$config_file" ]; then
                 echo "Mycroft config file $config_file does not exist."
@@ -97,7 +97,7 @@ jobs:
       - name: Check if Base Image URL Ends with .xz
         id: check-base-image-url
         run: |
-          base_image_url="${{ inputs.base-image-url }}"
+          base_image_url="${{ inputs.base_image_url }}"
           if [[ "$base_image_url" != *.xz ]]; then
             base_image_url="${base_image_url}.xz"
           fi
@@ -106,7 +106,7 @@ jobs:
       - name: Check if Image is Already Uploaded
         id: check-image
         run: |
-          image_url=${{ inputs.release_url }}/${{ inputs.image-path }}.xz
+          image_url=${{ inputs.release_url }}/${{ inputs.image_path }}.xz
           echo "Checking URL: $image_url"
           response=$(curl -L --write-out '%{http_code}' --silent --output /dev/null "$image_url")
           echo "HTTP response code: $response"
@@ -114,7 +114,7 @@ jobs:
             echo "Image already exists at $image_url"
             echo "skip_create_image=true" >> $GITHUB_OUTPUT
             echo "image_url=$image_url" >> $GITHUB_OUTPUT
-            echo "image_path=${{ inputs.image-path }}.xz" >> $GITHUB_OUTPUT
+            echo "image_path=${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
           else
             echo "Image does not exist at $image_url"
             echo "skip_create_image=false" >> $GITHUB_OUTPUT
@@ -130,16 +130,16 @@ jobs:
           PASSWORD: 'ovos'
           HOSTNAME: "raspOVOS"
           CONSTRAINTS: ${{ inputs.constraints }} 
-          MYCROFT_CONFIG_FILES: ${{ inputs.mycroft-config-files }}
+          MYCROFT_CONFIG_FILES: ${{ inputs.mycroft_config_files }}
         with:
-          base-image-url: ${{ inputs.base-image-url }}
-          image-path: ${{ inputs.image-path }}
+          base-image-url: ${{ inputs.base_image_url }}
+          image-path: ${{ inputs.image_path }}
           compress-with-xz: true
           cache: false
           shrink: true
           mount-repository: true
           env-vars: USER,PASSWORD,HOSTNAME,CONSTRAINTS,MYCROFT_CONFIG_FILES
-          script-path: ${{ inputs.script-path }}
+          script-path: ${{ inputs.script_path }}
   
       - name: Print outputs
         shell: bash
@@ -147,9 +147,9 @@ jobs:
           echo "image-path: ${{ steps.create-image.outputs.image-path }}"
           echo "image-size: ${{ steps.create-image.outputs.image-size }}"
           echo "image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}"
-          echo "image-path=${{ steps.create-image.outputs.image-path }}" >> $GITHUB_OUTPUT
-          echo "image-size=${{ steps.create-image.outputs.image-size }}" >> $GITHUB_OUTPUT
-          echo "image-sha256sum=${{ steps.create-image.outputs.image-sha256sum }}" >> $GITHUB_OUTPUT
+          echo "image_path=${{ steps.create-image.outputs.image-path }}" >> $GITHUB_OUTPUT
+          echo "image_size=${{ steps.create-image.outputs.image-size }}" >> $GITHUB_OUTPUT
+          echo "image_sha256sum=${{ steps.create-image.outputs.image-sha256sum }}" >> $GITHUB_OUTPUT
 
       - name: Upload to release
         if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}

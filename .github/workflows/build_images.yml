@@ -11,7 +11,7 @@ name: Build Images
 on:
   workflow_call:
     inputs:
-      base-image-url:
+      base_image_url:
         description: 'The URL of the base image'
         required: true
         type: string
@@ -27,11 +27,11 @@ on:
         description: 'The cache key'
         required: true
         type: string
-      mycroft-config-files:
+      mycroft_config_files:
         description: 'The Mycroft configuration files'
         required: true
         type: string
-      script-path:
+      script_path:
         description: 'The path to the script'
         required: true
         type: string
@@ -49,26 +49,26 @@ jobs:
     steps:
       - name: Debug - Print Input Variables
         run: |
-          echo "base-image-url: ${{ inputs.base-image-url }}"
+          echo "base-image-url: ${{ inputs.base_image_url }}"
           echo "release_url: ${{ inputs.release_url }}"
           echo "release_id: ${{ inputs.release_id }}"
           echo "cache_key: ${{ inputs.cache_key }}"
           echo "image-path: raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img"
-          echo "mycroft-config-files: ${{ inputs.mycroft-config-files }}"
-          echo "script-path: ${{ inputs.script-path }}"
+          echo "mycroft-config-files: ${{ inputs.mycroft_config_files }}"
+          echo "script-path: ${{ inputs.script_path }}"
           echo "constraints: ${{ inputs.constraints }}"
           echo "languages: ${{ inputs.languages }}"
 
   build-headles-image:
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
-      base-image-url: ${{ inputs.base-image-url }} 
+      base_image_url: ${{ inputs.base_image_url }} 
       release_url: ${{ inputs.release_url}}
       release_id: ${{ inputs.release_id }}
       cache_key: ${{ inputs.cache_key }}
-      image-path: "raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img"
-      mycroft-config-files: ${{ inputs.mycroft-config-files }}
-      script-path: ${{ inputs.script-path }}
+      image_path: "raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img"
+      mycroft_config_files: ${{ inputs.mycroft_config_files }}
+      script_path: ${{ inputs.script_path }}
       constraints: ${{ inputs.constraints }}
 #  build-gui-image:
 #    needs: [create-release, build-base-image, build-headles-image]
