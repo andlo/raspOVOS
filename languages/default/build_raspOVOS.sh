@@ -92,7 +92,7 @@ cp /tmp/ovos-i2csound/99-i2c.rules /usr/lib/udev/rules.d/99-i2c.rules
 chmod 644 /etc/systemd/system/i2csound.service
 chmod +x /usr/libexec/ovos-i2csound
 
-ln -s /etc/systemd/system/i2csound.service /etc/systemd/system/multi-user.target.wants/i2csound.service
+ln -sf/etc/systemd/system/i2csound.service /etc/systemd/system/multi-user.target.wants/i2csound.service
 
 echo "Installing admin phal..."
 pip install sdnotify ovos-bus-client ovos-phal ovos-PHAL-plugin-system -c $CONSTRAINTS --break-system-packages
@@ -100,7 +100,7 @@ pip install sdnotify ovos-bus-client ovos-phal ovos-PHAL-plugin-system -c $CONST
 cp -v /mounted-github-repo/services/ovos-admin-phal.service /etc/systemd/system/
 cp -v /mounted-github-repo/services/ovos-systemd-admin-phal /usr/libexec/ovos-systemd-admin-phal
 chmod 644 /etc/systemd/system/ovos-admin-phal.service
-ln -s /etc/systemd/system/ovos-admin-phal.service /etc/systemd/system/multi-user.target.wants/ovos-admin-phal.service
+ln -sf/etc/systemd/system/ovos-admin-phal.service /etc/systemd/system/multi-user.target.wants/ovos-admin-phal.service
 
 echo "Adding ntp sync signal..."
 # emit "system.clock.synced" to the bus
@@ -117,8 +117,8 @@ cp -v /mounted-github-repo/services/ovos-ssh-enabled-signal /usr/libexec/ovos-ss
 echo "Adding shutdown/reboot signals..."
 cp -v /mounted-github-repo/services/ovos-reboot-signal.service /etc/systemd/system/ovos-reboot-signal.service
 cp -v /mounted-github-repo/services/ovos-shutdown-signal.service /etc/systemd/system/ovos-shutdown-signal.service
-ln -s /etc/systemd/system/ovos-reboot-signal.service /etc/systemd/system/multi-user.target.wants/ovos-reboot-signal.service
-ln -s /etc/systemd/system/ovos-shutdown-signal.service /etc/systemd/system/multi-user.target.wants/ovos-shutdown-signal.service
+ln -sf/etc/systemd/system/ovos-reboot-signal.service /etc/systemd/system/multi-user.target.wants/ovos-reboot-signal.service
+ln -sf/etc/systemd/system/ovos-shutdown-signal.service /etc/systemd/system/multi-user.target.wants/ovos-shutdown-signal.service
 cp -v /mounted-github-repo/services/ovos-restart-signal /usr/libexec/ovos-restart-signal
 cp -v /mounted-github-repo/services/ovos-reboot-signal /usr/libexec/ovos-reboot-signal
 cp -v /mounted-github-repo/services/ovos-shutdown-signal /usr/libexec/ovos-shutdown-signal
@@ -191,14 +191,14 @@ chmod +x /usr/libexec/ovos-*
 
 # Enable services manually by creating symbolic links
 mkdir -p /home/$USER/.config/systemd/user/default.target.wants/
-ln -s /home/$USER/.config/systemd/user/ovos.service /home/$USER/.config/systemd/user/default.target.wants/ovos.service
-ln -s /home/$USER/.config/systemd/user/ovos-skills.service /home/$USER/.config/systemd/user/default.target.wants/ovos-skills.service
-ln -s /home/$USER/.config/systemd/user/ovos-messagebus.service /home/$USER/.config/systemd/user/default.target.wants/ovos-messagebus.service
-ln -s /home/$USER/.config/systemd/user/ovos-audio.service /home/$USER/.config/systemd/user/default.target.wants/ovos-audio.service
-ln -s /home/$USER/.config/systemd/user/ovos-listener.service /home/$USER/.config/systemd/user/default.target.wants/ovos-listener.service
-ln -s /home/$USER/.config/systemd/user/ovos-phal.service /home/$USER/.config/systemd/user/default.target.wants/ovos-phal.service
-ln -s /home/$USER/.config/systemd/user/ovos-gui.service /home/$USER/.config/systemd/user/default.target.wants/ovos-gui.service
-ln -s /home/$USER/.config/systemd/user/ovos-ggwave.service /home/$USER/.config/systemd/user/default.target.wants/ovos-ggwave.service
+ln -sf/home/$USER/.config/systemd/user/ovos.service /home/$USER/.config/systemd/user/default.target.wants/ovos.service
+ln -sf/home/$USER/.config/systemd/user/ovos-skills.service /home/$USER/.config/systemd/user/default.target.wants/ovos-skills.service
+ln -sf/home/$USER/.config/systemd/user/ovos-messagebus.service /home/$USER/.config/systemd/user/default.target.wants/ovos-messagebus.service
+ln -sf/home/$USER/.config/systemd/user/ovos-audio.service /home/$USER/.config/systemd/user/default.target.wants/ovos-audio.service
+ln -sf/home/$USER/.config/systemd/user/ovos-listener.service /home/$USER/.config/systemd/user/default.target.wants/ovos-listener.service
+ln -sf/home/$USER/.config/systemd/user/ovos-phal.service /home/$USER/.config/systemd/user/default.target.wants/ovos-phal.service
+ln -sf/home/$USER/.config/systemd/user/ovos-gui.service /home/$USER/.config/systemd/user/default.target.wants/ovos-gui.service
+ln -sf/home/$USER/.config/systemd/user/ovos-ggwave.service /home/$USER/.config/systemd/user/default.target.wants/ovos-ggwave.service
 
 echo "Ensuring permissions for $USER user..."
 # Replace 1000:1000 with the correct UID:GID if needed
