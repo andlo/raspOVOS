@@ -102,12 +102,12 @@ jobs:
           response=$(curl -L --write-out '%{http_code}' --silent --output /dev/null "$image_url")
           if [ "$response" -eq 200 ]; then
             echo "Image already exists at $image_url"
-            echo "skip_create_image=true" >> $GITHUB_OUTPUT
-            echo "image_url=$image_url" >> $GITHUB_OUTPUT
-            echo "image_path=${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
+            echo "skip_create_image=true" >> $GITHUB_ENV
+            echo "image_url=$image_url" >> $GITHUB_ENV
+            echo "image_path=${{ inputs.image_path }}.xz" >> $GITHUB_ENV
           else
             echo "Image does not exist at $image_url"
-            echo "skip_create_image=false" >> $GITHUB_OUTPUT
+            echo "skip_create_image=false" >> $GITHUB_ENV
           fi
 
       - name: Tune base Raspberry Pi OS Bookworm
