@@ -44,6 +44,21 @@ on:
         required: true
         type: string 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug - Print Input Variables
+        run: |
+          echo "base-image-url: ${{ inputs.base-image-url }}"
+          echo "release_url: ${{ inputs.release_url }}"
+          echo "release_id: ${{ inputs.release_id }}"
+          echo "cache_key: ${{ inputs.cache_key }}"
+          echo "image-path: raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img"
+          echo "mycroft-config-files: ${{ inputs.mycroft-config-files }}"
+          echo "script-path: ${{ inputs.script-path }}"
+          echo "constraints: ${{ inputs.constraints }}"
+          echo "languages: ${{ inputs.languages }}"
+
   build-headles-image:
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
@@ -55,7 +70,6 @@ jobs:
       mycroft-config-files: ${{ inputs.mycroft-config-files }}
       script-path: ${{ inputs.script-path }}
       constraints: ${{ inputs.constraints }}
-
 #  build-gui-image:
 #    needs: [create-release, build-base-image, build-headles-image]
 #    uses: ./.github/workflows/modify_rpi_image.yml
