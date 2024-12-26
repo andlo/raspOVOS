@@ -21,23 +21,24 @@ jobs:
     needs: create-release
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
-      base-image-url: https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2024-11-19/2024-11-19-raspios-bookworm-arm64-lite.img.xz
+      base_image_url: https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2024-11-19/2024-11-19-raspios-bookworm-arm64-lite.img.xz
       release_url: ${{ needs.create-release.outputs.release_url }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
-      image-path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
-      script-path: ./base/build_base.sh
+      image_path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
+      script_path: ./base/build_base.sh
 
   build-base-image:
     needs: [create-release, build-no-ovos-image]
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
-      base-image-url: ${{ needs.build-no-ovos-image.outputs.image-url }}/${{ needs.build-no-ovos-image.outputs.image-path }}
+      base_image_url: ${{ needs.build-no-ovos-image.outputs.image-url }}/${{ needs.build-no-ovos-image.outputs.image-path }}
       release_url: ${{ needs.create-release.outputs.release_url }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
-      image-path: raspOVOS-BASE-bookworm-arm64-lite.img
-      script-path: ./languages/default/build_raspOVOS.sh
+      image_path: raspOVOS-BASE-bookworm-arm64-lite.img
+      mycroft_config_files: "./languages/default/mycroft.conf"
+      script_path: ./languages/default/build_raspOVOS.sh
       constraints: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
 
 
@@ -68,8 +69,8 @@ jobs:
       release_url: ${{ needs.create-release.outputs.release_url }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
-      mycroft-config-files: "./languages/default/mycroft.conf,./languages/${{ matrix.language }}/mycroft.conf"
-      script-path: "./languages/${{ matrix.language }}/build_raspOVOS.sh"      
+      mycroft_config_files: "./languages/default/mycroft.conf,./languages/${{ matrix.language }}/mycroft.conf"
+      script_path: "./languages/${{ matrix.language }}/build_raspOVOS.sh"      
       constraints: https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt
       languages: ${{ matrix.language }}
 
