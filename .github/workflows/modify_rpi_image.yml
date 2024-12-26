@@ -46,10 +46,10 @@ on:
     outputs:
       image_path:
         description: 'The path to the modified image'
-         value: ${{ inputs.release_url }}/${{ jobs.modify-rpi-image.outputs.image-path || steps.check-image.outputs.image_path }}
+        value: ${{ inputs.release_url }}/${{ jobs.modify-rpi-image.outputs.image-path != '' && jobs.modify-rpi-image.outputs.image-path || jobs.modify-rpi-image.outputs.image_path }}
       image_url:
         description: 'The URL of the modified image'
-        value: ${{ inputs.release_url }}/${{ jobs.modify-rpi-image.outputs.image-path }} || ${{ inputs.release_url }}/${{ steps.check-image.outputs.image_path }}
+        value: ${{ inputs.release_url }}/${{ jobs.modify-rpi-image.outputs.image-path != '' && jobs.modify-rpi-image.outputs.image-path || jobs.modify-rpi-image.outputs.image_path }}
       image_size:
         description: 'The size of the modified image'
         value: ${{ jobs.modify-rpi-image.outputs.image-size }}
