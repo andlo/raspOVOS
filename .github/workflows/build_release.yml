@@ -26,7 +26,7 @@ jobs:
     needs: [create-release, build-base-image]
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix: ${{ steps.list-dirs.outputs.matrix }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
