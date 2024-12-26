@@ -74,6 +74,7 @@ jobs:
           if [ ! -f "${{ inputs.script_path }}" ]; then
             echo "Script file ${{ inputs.script_path }} does not exist."
             echo "skip_steps=true" >> $GITHUB_OUTPUT
+            echo "Script file ${{ inputs.script_path }} exist."
           else
             IFS=',' read -r -a file_array <<< "${{ inputs.mycroft_config_files }}"
             for config_file in "${file_array[@]}"; do
@@ -92,7 +93,7 @@ jobs:
           if [[ "$base_image_url" != *.xz ]]; then
             base_image_url="${base_image_url}.xz"
           fi
-          echo "base_image_url=$base_image_url" >> $GITHUB_ENV
+          echo "base_image_url=$base_image_url" >> $GITHUB_OUTPUT
 
       - name: Check if Image is Already Uploaded
         id: check-image
@@ -102,12 +103,12 @@ jobs:
           response=$(curl -L --write-out '%{http_code}' --silent --output /dev/null "$image_url")
           if [ "$response" -eq 200 ]; then
             echo "Image already exists at $image_url"
-            echo "skip_create_image=true" >> $GITHUB_ENV
-            echo "image_url=$image_url" >> $GITHUB_ENV
-            echo "image_path=${{ inputs.image_path }}.xz" >> $GITHUB_ENV
+            echo "skip_create_image=true" >> $GITHUB_OUTPUT
+            echo "image_url=$image_url" >> $GITHUB_OUTPUT
+            echo "image_path=${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
           else
             echo "Image does not exist at $image_url"
-            echo "skip_create_image=false" >> $GITHUB_ENV
+            echo "skip_create_image=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Tune base Raspberry Pi OS Bookworm
