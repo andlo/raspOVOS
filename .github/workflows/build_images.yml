@@ -27,18 +27,6 @@ on:
         description: 'The cache key'
         required: true
         type: string
-      mycroft_config_files:
-        description: 'The Mycroft configuration files'
-        required: true
-        type: string
-      script_path:
-        description: 'The path to the script'
-        required: true
-        type: string
-      constraints:
-        description: 'The constraints file'
-        required: true
-        type: string
       languages:
         description: 'The languages'
         required: true
@@ -67,20 +55,21 @@ jobs:
       release_id: ${{ inputs.release_id }}
       cache_key: ${{ inputs.cache_key }}
       image_path: "raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img"
-      mycroft_config_files: ${{ inputs.mycroft_config_files }}
-      script_path: ${{ inputs.script_path }}
-      constraints: ${{ inputs.constraints }}
-#  build-gui-image:
-#    needs: [create-release, build-base-image, build-headles-image]
-#    uses: ./.github/workflows/modify_rpi_image.yml
-#    with:
-#      base-image-url: ${{ needs.build-headles-image.outputs.image-url }}
-#      release_url: ${{ needs.create-release.outputs.release_url }}
-#      release_id: ${{ needs.create-release.outputs.release_id }}
-#      cache_key: ${{ needs.create-release.outputs.cache_key }}
-#      image-path: raspOVOS-GUI-bookworm-arm64-lite.img
-#      mycroft-config-files: mycroft.conf, mycroft_gui.conf
-#      script-path: build_raspOVOS_gui.sh
+      mycroft_config_files: ".languages/default/mycroft.conf,./languages/${{ inputs.languages }}/mycroft.conf" 
+      script_path: ./languages/${{ inputs.languages }}/build_raspOVOS.sh 
+      constraints: https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt
+
+  build-gui-image:
+    uses: ./.github/workflows/modify_rpi_image.yml
+    with:
+      base_image_url: ${{ inputs.base_image_url }}
+      release_url: ${{ inputs.release_url}}
+      release_id: ${{ inputs.release_id }}
+      cache_key: ${{ inputs.cache_key }}
+      image_path: "raspOVOS-${{ inputs.languages }}-GUI-bookworm-arm64-lite.img"
+      mycroft_config_files: ".languages/default/mycroft.conf,.languages/default/mycroft_gui.conf,./languages/${{ inputs.languages }}/mycroft.conf,./languages/${{ inputs.languages }}/mycroft_gui.conf" 
+      script_path: ./languages/${{ inputs.languages }}/build_raspOVOS_gui.sh 
+      constraints: https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt
         
 #  build-mk2-image:
 #    needs: [create-release, build-base-image, build-headles-image, build-gui-image]
