@@ -60,6 +60,7 @@ jobs:
       constraints: https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt
 
   build-gui-image:
+    needs: [build-headles-image]
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
       base_image_url: ${{ inputs.base_image_url }}
