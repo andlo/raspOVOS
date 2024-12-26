@@ -62,7 +62,7 @@ jobs:
     strategy:
       matrix:
         language: ${{ fromJson(needs.list-languages.outputs.matrix) }}
-      max-parallel: 1
+      # max-parallel: 1
     uses: ./.github/workflows/build_images.yml
     with:
       base_image_url: ${{ needs.build-base-image.outputs.image_url }}
