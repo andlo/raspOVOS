@@ -35,6 +35,10 @@ on:
         description: 'The path to the script'
         required: true
         type: string
+      constraints:
+        description: 'The constraints file'
+        required: true
+        type: string
       languages:
         description: 'The languages'
         required: true
@@ -50,6 +54,7 @@ jobs:
       image-path: "raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img"
       mycroft-config-files: ${{ inputs.mycroft-config-files }}
       script-path: ${{ inputs.script-path }}
+      constraints: ${{ inputs.constraints }}
 
 #  build-gui-image:
 #    needs: [create-release, build-base-image, build-headles-image]

@@ -37,7 +37,11 @@ on:
         type: string
       mycroft-config-files:
         description: 'The Mycroft configuration files'
-        required: true
+        required: false
+        type: string
+      constraints:
+        description: 'The constraints file'
+        required: false
         type: string
     outputs:
       image-path:
@@ -105,7 +109,7 @@ jobs:
           USER: 'ovos'
           PASSWORD: 'ovos'
           HOSTNAME: "raspOVOS"
-          CONSTRAINTS: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
+          CONSTRAINTS: ${{ inputs.constraints }} 
           MYCROFT_CONFIG_FILES: ${{ inputs.mycroft-config-files }}
         with:
           base-image-url: ${{ inputs.base-image-url }}
