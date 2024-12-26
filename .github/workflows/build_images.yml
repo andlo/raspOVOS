@@ -47,7 +47,7 @@ jobs:
       release_url: ${{ inputs.release_url}}
       release_id: ${{ inputs.release_id }}
       cache_key: ${{ inputs.cache_key }}
-      image-path: "raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img.xz"
+      image-path: "raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img"
       mycroft-config-files: ${{ inputs.mycroft-config-files }}
       script-path: ${{ inputs.script-path }}
 
