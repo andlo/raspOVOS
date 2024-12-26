@@ -40,7 +40,7 @@ mkdir -p /opt/ovos
 cp -v /mounted-github-repo/services/splashscreen.png /opt/ovos/splashscreen.png
 cp -v /mounted-github-repo/services/splashscreen.service /etc/systemd/system/splashscreen.service
 chmod 644 /etc/systemd/system/splashscreen.service
-ln -s /etc/systemd/system/splashscreen.service /etc/systemd/system/multi-user.target.wants/splashscreen.service
+ln -sf /etc/systemd/system/splashscreen.service /etc/systemd/system/multi-user.target.wants/splashscreen.service
 
 echo "Creating OVOS login ASCII art..."
 cp -v /mounted-github-repo/tuning/etc_issue /etc/issue

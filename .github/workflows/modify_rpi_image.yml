@@ -66,16 +66,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Debug - Print Input Variables
-        run: |
-          echo "base_image_url: ${{ inputs.base_image_url }}"
-          echo "release_id: ${{ inputs.release_id }}"
-          echo "release_url: ${{ inputs.release_url }}"
-          echo "cache_key: ${{ inputs.cache_key }}"
-          echo "image_path: ${{ inputs.image_path }}"
-          echo "script_path: ${{ inputs.script_path }}"
-          echo "mycroft_config_files: ${{ inputs.mycroft_config_files }}"
-          echo "constraints: ${{ inputs.constraints }}"
       
       - name: Check if Required Files Exist
         id: check-files
@@ -109,7 +99,6 @@ jobs:
           image_url=${{ inputs.release_url }}/${{ inputs.image_path }}.xz
           echo "Checking URL: $image_url"
           response=$(curl -L --write-out '%{http_code}' --silent --output /dev/null "$image_url")
-          echo "HTTP response code: $response"
           if [ "$response" -eq 200 ]; then
             echo "Image already exists at $image_url"
             echo "skip_create_image=true" >> $GITHUB_OUTPUT
@@ -122,7 +111,6 @@ jobs:
 
       - name: Tune base Raspberry Pi OS Bookworm
         if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
-        # continue-on-error: true
         uses: TigreGotico/rpi-image-modifier@main
         id: create-image
         env:
