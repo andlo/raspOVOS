@@ -61,6 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image-path: ${{ steps.create-image.outputs.image-path }}
+      image-url: ${{ steps.image-url-path.outputs.image-url }}
       image-size: ${{ steps.create-image.outputs.image-size }}
       image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}
     steps:
