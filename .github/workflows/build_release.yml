@@ -37,7 +37,7 @@ jobs:
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image-path: raspOVOS-BASE-bookworm-arm64-lite.img
-      script-path: ./language/default/build_raspOVOS.sh
+      script-path: ./languages/default/build_raspOVOS.sh
       constraints: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
 
 
