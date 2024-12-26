@@ -29,7 +29,7 @@ jobs:
       script-path: ./base/build_base.sh
 
   build-base-image:
-    needs: build-no-ovos-image
+    needs: [create-release, build-no-ovos-image]
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
       base-image-url: ${{ needs.build-no-ovos-image.outputs.image-url }}
@@ -42,7 +42,7 @@ jobs:
 
 
   list-languages:
-    needs: [create-release, build-base-image]
+    needs: [create-release, build-no-ovos-image,  build-base-image]
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.list-dirs.outputs.matrix }}
