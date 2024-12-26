@@ -32,7 +32,7 @@ jobs:
     needs: [create-release, build-no-ovos-image]
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
-      base_image_url: ${{ needs.build-no-ovos-image.outputs.image-url }}
+      base_image_url: ${{ needs.build-no-ovos-image.outputs.image_url }}
       release_url: ${{ needs.create-release.outputs.release_url }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
