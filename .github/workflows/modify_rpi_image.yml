@@ -46,10 +46,10 @@ on:
     outputs:
       image_path:
         description: 'The path to the modified image'
-        value: ${{ inputs.image_path}}
+        value: ${{ jobs.modify-rpi-image.outputs.image-path || inputs.image_path + '.xz' }}
       image_url:
         description: 'The URL of the modified image'
-        value: ${{ inputs.release_url }}/${{ inputs.image_path }}.xz
+        value: ${{ jobs.modify-rpi-image.outputs.image-url || format('{0}/{1}.xz', inputs.release_url, inputs.image_path) }}
       image_size:
         description: 'The size of the modified image'
         value: ${{ jobs.modify-rpi-image.outputs.image-size }}
