@@ -50,7 +50,7 @@ jobs:
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image_path: raspOVOS-GUI-bookworm-arm64-lite.img
-      mycroft_config_files: "./languages/base/mycroft.conf"
+      mycroft_config_files: "./languages/base/mycroft.conf,./languages/base/mycroft_gui.conf"
       script_path: ./languages/base/build_raspOVOS_gui.sh
       constraints: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
      
