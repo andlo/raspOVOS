@@ -115,7 +115,7 @@ jobs:
           response=$(curl -L --write-out '%{http_code}' --silent --output /dev/null "$image_url")
           if [ "$response" -eq 200 ]; then
             echo "Image already exists at $image_url"
-            echo "skip_steps=true" >> $GITHUB_OUTPUT
+            echo "skip_create_image=true" >> $GITHUB_OUTPUT
             echo "image_url=$image_url" >> $GITHUB_OUTPUT
             echo "image_path=${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
             echo "image_url=${{inputs.release_url}}/${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
@@ -125,7 +125,7 @@ jobs:
           fi
 
       - name: Tune base Raspberry Pi OS Bookworm
-        if: ${{ skip_steps == 'false' }}
+        if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
         uses: TigreGotico/rpi-image-modifier@main
         id: create-image
         env:
@@ -145,7 +145,7 @@ jobs:
           script-path: ${{ inputs.script_path }}
   
       - name: Upload to release
-        if: ${{skip_steps == 'false'}}
+        if: ${{steps.create-image.outputs.image-path != ''}}  
         uses: xresloader/upload-to-github-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
