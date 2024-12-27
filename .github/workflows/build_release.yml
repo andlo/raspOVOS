@@ -56,7 +56,7 @@ jobs:
      
 
   list-languages:
-    needs: [create-release, build-no-ovos-image,  build-base-image]
+    needs: [create-release, build-no-ovos-image, build-base-image, build-gui-image]
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.list-dirs.outputs.matrix }}
