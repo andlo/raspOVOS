@@ -53,7 +53,7 @@ jobs:
       - name: List language directories
         id: list-dirs
         run: |
-          dirs=$(ls -d ./languages/*/ | grep -v './languages/default/')
+          dirs=$(ls -d ./languages/*/)
           dirs_json=$(echo $dirs | sed 's|./languages/||g' | sed 's|/||g' | tr '\n' ' ' | jq -R -s -c 'split(" ") | map(select(length > 0))')
           echo "matrix=$dirs_json" >> $GITHUB_OUTPUT
           echo "matrix=$dirs_json"
