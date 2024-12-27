@@ -87,6 +87,7 @@ jobs:
             base_image_url="${base_image_url}.xz"
           fi
           echo "base_image_url=$base_image_url" >> $GITHUB_OUTPUT
+          echo "base_image_url=$base_image_url"
 
       - name: Check if Image is Already Uploaded
         id: check-image
@@ -116,7 +117,7 @@ jobs:
           CONSTRAINTS: ${{ inputs.constraints }} 
           MYCROFT_CONFIG_FILES: ${{ inputs.mycroft_config_files }}
         with:
-          base-image-url: ${{ inputs.base_image_url }}
+          base-image-url: ${{ steps.check-base-image-url.outputs.base_image_url }}
           image-path: ${{ inputs.image_path }}
           compress-with-xz: true
           cache: false
