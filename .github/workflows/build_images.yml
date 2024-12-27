@@ -31,12 +31,13 @@ jobs:
   create-image-path:
     runs-on: ubuntu-latest
     outputs:
-      image-path: ${{ steps.set-image-path.outputs.image-path }}
+      image_path: ${{ steps.set-image-path.outputs.image_path }}
+      image_gui_path: ${{ steps.set-image-path.outputs.image_gui-path }}
     steps:
       - name: Set image path
         id: set-image-path
         run: | 
-          if [ "${{ inputs.language }}" == '' ]; then
+          if [ "${{ inputs.languages }}" == '' ]; then
             echo "image_path=raspOVOS-bookworm-arm64-lite.img" >> $GITHUB_OUTPUT
             echo "image_gui_path=raspOVOS-GUI-bookworm-arm64-lite.img" >> $GITHUB_OUTPUT
           else
@@ -45,26 +46,27 @@ jobs:
           fi
 
   build-headles-image:
+    needs: create-image-path
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
       base_image_url: ${{ inputs.release_url}}/raspOVOS-bookworm-arm64-lite.img
       release_url: ${{ inputs.release_url}}
       release_id: ${{ inputs.release_id }}
       cache_key: ${{ inputs.cache_key }}
-      image_path: ${{ steps.create-image-path.outputs.image-path }}
+      image_path: ${{ needs.create-image-path.outputs.image_path }}
       mycroft_config_files: "./languages/base/mycroft.conf,./languages/${{ inputs.languages }}/mycroft.conf" 
       script_path: ./languages/${{ inputs.languages }}/build_raspOVOS.sh 
       constraints: https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt
 
   build-gui-image:
-    needs: [build-headles-image]
+    needs: create-image-path
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
       base_image_url: ${{ inputs.release_url}}/raspOVOS-GUI-bookworm-arm64-lite.img
       release_url: ${{ inputs.release_url}}
       release_id: ${{ inputs.release_id }}
       cache_key: ${{ inputs.cache_key }}
-      image_path: ${{ steps.create-image-path.outputs.image-gui-path }}
+      image_path: ${{ needs.create-image-path.outputs.image_gui_path }}
       mycroft_config_files: "./languages/base/mycroft.conf,./languages/base/mycroft_gui.conf,./languages/${{ inputs.languages }}/mycroft.conf,./languages/${{ inputs.languages }}/mycroft_gui.conf" 
       script_path: ./languages/${{ inputs.languages }}/build_raspOVOS_gui.sh 
       constraints: https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt
