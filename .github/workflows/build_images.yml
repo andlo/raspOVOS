@@ -11,10 +11,6 @@ name: Build Images
 on:
   workflow_call:
     inputs:
-      base_image_url:
-        description: 'The URL of the base image'
-        required: true
-        type: string
       release_url:
         description: 'The release URL'
         required: true
@@ -35,7 +31,7 @@ jobs:
   build-headles-image:
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
-      base_image_url: ${{ inputs.base_image_url }}
+      base_image_url: ${{ inputs.release_url}}/raspOVOS-bookworm-arm64-lite.img
       release_url: ${{ inputs.release_url}}
       release_id: ${{ inputs.release_id }}
       cache_key: ${{ inputs.cache_key }}
