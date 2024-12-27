@@ -46,24 +46,24 @@ on:
     outputs:
       image_path:
         description: 'The path to the modified image'
-        value: ${{ jobs.modify-rpi-image.outputs.image-path }}
+        value: ${{ jobs.modify-rpi-image.outputs.image_path }}
       image_url:
         description: 'The URL of the modified image'
-        value: ${{ jobs.modify-rpi-image.outputs.image-url }}
+        value: ${{ jobs.modify-rpi-image.outputs.image_url }}
       image_size:
         description: 'The size of the modified image'
-        value: ${{ jobs.modify-rpi-image.outputs.image-size }}
+        value: ${{ jobs.modify-rpi-image.outputs.image_size }}
       image_sha256sum:
         description: 'The sha256sum of the modified image'
-        value: ${{ jobs.modify-rpi-image.outputs.image-sha256sum }}
+        value: ${{ jobs.modify-rpi-image.outputs.image_sha256sum }}
 jobs:
   modify-rpi-image:
     runs-on: ubuntu-latest
     outputs:
-      image-path: ${{ steps.create-image.outputs.image-path }}
-      image-url: ${{ steps.image-url-path.outputs.image-url }}
-      image-size: ${{ steps.create-image.outputs.image-size }}
-      image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}
+      image_path: ${{ steps.create-image.outputs.image-path }}.xz
+      image_url: ${{ inputs.release_url }}/${{ steps.create-image.outputs.image-path }}.xz
+      image_size: ${{ steps.create-image.outputs.image-size }}
+      image_sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -82,6 +82,7 @@ jobs:
       - name: Check if Required Files Exist
         id: check-files
         run: |
+          echo "skip_steps=false" >> $GITHUB_OUTPUT
           if [ ! -f "${{ inputs.script_path }}" ]; then
             echo "Script file ${{ inputs.script_path }} does not exist."
             echo "skip_steps=true" >> $GITHUB_OUTPUT
@@ -114,12 +115,13 @@ jobs:
           response=$(curl -L --write-out '%{http_code}' --silent --output /dev/null "$image_url")
           if [ "$response" -eq 200 ]; then
             echo "Image already exists at $image_url"
-            echo "skip_create_image=true" >> $GITHUB_OUTPUT
+            echo "skip_steps=true" >> $GITHUB_OUTPUT
             echo "image_url=$image_url" >> $GITHUB_OUTPUT
             echo "image_path=${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
+            echo "image_url=${{inputs.release_url}}/${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
           else
             echo "Image does not exist at $image_url"
-            echo "skip_create_image=false" >> $GITHUB_OUTPUT
+            echo "skip_create_image=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Tune base Raspberry Pi OS Bookworm
@@ -142,20 +144,6 @@ jobs:
           env-vars: USER,PASSWORD,HOSTNAME,CONSTRAINTS,MYCROFT_CONFIG_FILES
           script-path: ${{ inputs.script_path }}
   
-      - name: Set output image URL and path if image was created
-        if: ${{ steps.check-image.outputs.skip_create_image == 'false' }}
-        id: image-url-path-created
-        run: |
-          echo "image-url=${{ inputs.release_url }}/${{ steps.create-image.outputs.image-path }}.xz" >> $GITHUB_OUTPUT
-          echo "image-path=${{ steps.create-image.outputs.image-path }}.xz" >> $GITHUB_OUTPUT
-
-      - name: Set output image URL and path if image already exists
-        if: ${{ steps.check-image.outputs.skip_create_image == 'true' }}
-        id: image-url-path-already-exists
-        run: |
-          echo "image-url=${{ inputs.release_url }}/${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
-          echo "image-path=${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
-
       - name: Upload to release
         if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
         uses: xresloader/upload-to-github-release@v1
