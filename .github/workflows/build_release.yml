@@ -26,7 +26,7 @@ jobs:
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image_path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
-      script_path: ./base/build_base.sh
+      script_path: ./languages/base/build_base.sh
 
   build-base-image:
     needs: [create-release, build-no-ovos-image]
@@ -53,7 +53,7 @@ jobs:
       - name: List language directories
         id: list-dirs
         run: |
-          dirs=$(ls -d ./languages/*/)
+          dirs=$(ls -d ./languages/*/ | grep -v './languages/base/')
           dirs_json=$(echo $dirs | sed 's|./languages/||g' | sed 's|/||g' | tr '\n' ' ' | jq -R -s -c 'split(" ") | map(select(length > 0))')
           echo "matrix=$dirs_json" >> $GITHUB_OUTPUT
           echo "matrix=$dirs_json"
