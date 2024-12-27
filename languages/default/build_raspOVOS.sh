@@ -32,7 +32,7 @@ echo "The UID for '$USER' is: $TUID"
 
 # Update package list and install necessary tools
 echo "Installing system packages..."
-apt-get install -y --no-install-recommends i2c-tools mpv libssl-dev libfann-dev portaudio19-dev libpulse-dev
+apt-get install -y --no-install-recommends i2c-tools mpv libssl-dev libfann-dev portaudio19-dev libpulse-dev libcap-dev
 
 # splashscreen
 echo "Creating OVOS splashscreen..."

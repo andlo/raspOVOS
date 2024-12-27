@@ -68,7 +68,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
-      - name: Debug - Print Input Variables
+      - name: DEBUG
         run: |
           echo "base_image_url: ${{ inputs.base_image_url }}"
           echo "release_id: ${{ inputs.release_id }}"
@@ -149,13 +149,6 @@ jobs:
           echo "image-url=${{ inputs.release_url }}/${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
           echo "image-path=${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
 
-      - name: Print outputs
-        shell: bash
-        run: |
-          echo "image-path: ${{ steps.create-image.outputs.image-path }}"
-          echo "image-size: ${{ steps.create-image.outputs.image-size }}"
-          echo "image-sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}"
-
       - name: Upload to release
         if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
         uses: xresloader/upload-to-github-release@v1
@@ -168,4 +161,3 @@ jobs:
           overwrite: true
           prerelease: false
           verbose: true
-        
