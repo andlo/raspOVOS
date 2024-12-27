@@ -74,9 +74,9 @@ jobs:
           if [ ! -f "${{ inputs.script_path }}" ]; then
             echo "Script file ${{ inputs.script_path }} does not exist."
             echo "skip_steps=true" >> $GITHUB_OUTPUT
-            echo "Script file ${{ inputs.script_path }} exist."
           else
             echo "skip_steps=false" >> $GITHUB_OUTPUT
+            echo "Script file ${{ inputs.script_path }} exist."
           fi
 
       - name: Check if Base Image URL Ends with .xz
