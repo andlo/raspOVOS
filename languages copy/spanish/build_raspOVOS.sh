@@ -5,12 +5,16 @@
 # scroll back and figure out what went wrong.
 set -e
 
+
 # Activate the virtual environment
 source /home/$USER/.venvs/ovos/bin/activate
 
+# Setting up default wifi country
 echo "Setting up default wifi country..."
 /usr/bin/raspi-config nonint do_wifi_country ES
 
+# Install aditional packages
+# add here the packages you need to install
 echo "Installing AhoTTS"
 uv pip install --no-progress ovos-tts-plugin-ahotts
 git clone https://github.com/aholab/AhoTTS /tmp/AhoTTS
@@ -28,12 +32,22 @@ wget https://alphacephei.com/vosk/models/vosk-model-small-es-0.42.zip -P $VOSK_D
 unzip -o $VOSK_DIR/vosk-model-small-es-0.42.zip -d $VOSK_DIR
 rm $VOSK_DIR/vosk-model-small-es-0.42.zip
 
+# Caching pre-trained padatious intents 
+echo "Caching pre-trained padatious intents..."
+mkdir -p /home/$USER/.local/share/mycroft/intent_cache
+if [ -d "/mounted-github-repo/$INTENT_CACHE" ]; then
+  echo "Copying intent_cache directory..."
+  cp -rv "/mounted-github-repo/$INTENT_CACHE" "/home/$USER/.local/share/mycroft/intent_cache/"
+else
+  echo "intent_cache directory does not exist. Skipping copy."
+fi
 
+# TODO TTS and STT
 echo "Creating system level mycroft.conf..."
 mkdir -p /etc/mycroft
 
-CONFIG_ARGS=""
 # Loop through the MYCROFT_CONFIG_FILES variable and append each file to the jq command
+CONFIG_ARGS=""
 IFS=',' read -r -a config_files <<< "$MYCROFT_CONFIG_FILES"
 for file in "${config_files[@]}"; do
   CONFIG_ARGS="$CONFIG_ARGS /mounted-github-repo/$file"

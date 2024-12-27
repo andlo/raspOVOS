@@ -5,19 +5,16 @@
 # scroll back and figure out what went wrong.
 set -e
 
+
 # Activate the virtual environment
 source /home/$USER/.venvs/ovos/bin/activate
 
+# Setting up default wifi country
 echo "Setting up default wifi country..."
 /usr/bin/raspi-config nonint do_wifi_country ES
 
-echo "Updating splashscreen..."
-cp -v /mounted-github-repo/services/splashscreen_ca.png /opt/ovos/splashscreen.png
-
-echo "Caching pre-trained padatious intents..."
-mkdir -p /home/$USER/.local/share/mycroft/intent_cache
-cp -rv /mounted-github-repo/intent_cache/ca-ES /home/$USER/.local/share/mycroft/intent_cache/
-
+# Install aditional packages
+# add here the packages you need to install
 echo "Installing Catalan specific skills"
 uv pip install --no-progress ovos-skill-fuster-quotes
 
@@ -51,17 +48,29 @@ wget https://alphacephei.com/vosk/models/vosk-model-small-ca-0.4.zip -P $VOSK_DI
 unzip -o $VOSK_DIR/vosk-model-small-ca-0.4.zip -d $VOSK_DIR
 rm $VOSK_DIR/vosk-model-small-ca-0.4.zip
 
+# Caching pre-trained padatious intents 
+echo "Caching pre-trained padatious intents..."
+mkdir -p /home/$USER/.local/share/mycroft/intent_cache
+if [ -d "/mounted-github-repo/$INTENT_CACHE" ]; then
+  echo "Copying intent_cache directory..."
+  cp -rv "/mounted-github-repo/$INTENT_CACHE" "/home/$USER/.local/share/mycroft/intent_cache/"
+else
+  echo "intent_cache directory does not exist. Skipping copy."
+fi
+
+# TODO TTS and STT
 echo "Creating system level mycroft.conf..."
 mkdir -p /etc/mycroft
 
-CONFIG_ARGS=""
 # Loop through the MYCROFT_CONFIG_FILES variable and append each file to the jq command
+CONFIG_ARGS=""
 IFS=',' read -r -a config_files <<< "$MYCROFT_CONFIG_FILES"
 for file in "${config_files[@]}"; do
   CONFIG_ARGS="$CONFIG_ARGS /mounted-github-repo/$file"
 done
 # Execute the jq command and merge the files into mycroft.conf
 jq -s 'reduce .[] as $item ({}; . * $item)' $CONFIG_ARGS > /etc/mycroft/mycroft.conf
+
 
 echo "Ensuring permissions for $USER user..."
 # Replace 1000:1000 with the correct UID:GID if needed

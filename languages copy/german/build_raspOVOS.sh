@@ -5,16 +5,16 @@
 # scroll back and figure out what went wrong.
 set -e
 
+
 # Activate the virtual environment
 source /home/$USER/.venvs/ovos/bin/activate
 
+# Setting up default wifi country
 echo "Setting up default wifi country..."
 /usr/bin/raspi-config nonint do_wifi_country DE
 
-echo "Caching pre-trained padatious intents..."
-mkdir -p /home/$USER/.local/share/mycroft/intent_cache
-cp -rv /mounted-github-repo/intent_cache/de-DE /home/$USER/.local/share/mycroft/intent_cache/
-
+# Install aditional packages
+# add here the packages you need to install
 echo "Installing Citrinet plugin..."
 uv pip install --no-progress ovos-stt-plugin-citrinet
 
@@ -31,7 +31,9 @@ mkdir -p $VOSK_DIR
 wget https://alphacephei.com/vosk/models/vosk-model-small-de-0.15.zip -P $VOSK_DIR
 unzip -o $VOSK_DIR/vosk-model-small-de-0.15.zip -d $VOSK_DIR
 rm $VOSK_DIR/vosk-model-small-de-0.15.zip
-
+# TODO TTS and STT
+echo "Creating system level mycroft.conf..."
+mkdir -p /etc/mycroft
 
 echo "Installing Piper TTS..."
 uv pip install --no-progress ovos-tts-plugin-piper -c $CONSTRAINTS
@@ -48,12 +50,8 @@ tar -xvzf "$VOICE_ARCHIVE" -C "$PIPER_DIR"
 rm "$VOICE_ARCHIVE"
 touch $VOICE_ARCHIVE
 
-
-echo "Creating system level mycroft.conf..."
-mkdir -p /etc/mycroft
-
-CONFIG_ARGS=""
 # Loop through the MYCROFT_CONFIG_FILES variable and append each file to the jq command
+CONFIG_ARGS=""
 IFS=',' read -r -a config_files <<< "$MYCROFT_CONFIG_FILES"
 for file in "${config_files[@]}"; do
   CONFIG_ARGS="$CONFIG_ARGS /mounted-github-repo/$file"

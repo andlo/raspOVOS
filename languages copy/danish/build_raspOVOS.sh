@@ -5,44 +5,33 @@
 # scroll back and figure out what went wrong.
 set -e
 
+
 # Activate the virtual environment
 source /home/$USER/.venvs/ovos/bin/activate
 
+# Setting up default wifi country
 echo "Setting up default wifi country..."
 /usr/bin/raspi-config nonint do_wifi_country DK
 
-#echo "Caching pre-trained padatious intents..."
-#mkdir -p /home/$USER/.local/share/mycroft/intent_cache
-#cp -rv /mounted-github-repo/intent_cache/da-DK /home/$USER/.local/share/mycroft/intent_cache/
+# Install aditional packages
+# add here the packages you need to install
 
-echo "Installing Piper TTS..."
-uv pip install --no-progress ovos-tts-plugin-piper -c $CONSTRAINTS
+# Caching pre-trained padatious intents 
+echo "Caching pre-trained padatious intents..."
+mkdir -p /home/$USER/.local/share/mycroft/intent_cache
+if [ -d "/mounted-github-repo/$INTENT_CACHE" ]; then
+  echo "Copying intent_cache directory..."
+  cp -rv "/mounted-github-repo/$INTENT_CACHE" "/home/$USER/.local/share/mycroft/intent_cache/"
+else
+  echo "intent_cache directory does not exist. Skipping copy."
+fi
 
-# Download and extract VOSK model
-VOSK_DIR="/home/$USER/.local/share/vosk"
-mkdir -p $VOSK_DIR
-wget http://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip -P $VOSK_DIR
-unzip -o $VOSK_DIR/vosk-model-small-en-us-0.15.zip -d $VOSK_DIR
-rm $VOSK_DIR/vosk-model-small-en-us-0.15.zip
-
-# download default piper voice for english  (change this for other languages)
-PIPER_DIR="/home/$USER/.local/share/piper_tts/voice-da-nst_talesyntese-medium"
-VOICE_URL="https://github.com/rhasspy/piper/releases/download/v0.0.2/voice-da-nst_talesyntese-medium.tar.gz"
-VOICE_ARCHIVE="$PIPER_DIR/voice-da-nst_talesyntese-medium.tar.gz"
-mkdir -p "$PIPER_DIR"
-echo "Downloading voice from $VOICE_URL..."
-wget "$VOICE_URL" -O "$VOICE_ARCHIVE"
-tar -xvzf "$VOICE_ARCHIVE" -C "$PIPER_DIR"
-# if we remove the voice archive the plugin will think its missing and redownload voice on boot...
-rm "$VOICE_ARCHIVE"
-touch $VOICE_ARCHIVE
-
-
+# TODO TTS and STT
 echo "Creating system level mycroft.conf..."
 mkdir -p /etc/mycroft
 
-CONFIG_ARGS=""
 # Loop through the MYCROFT_CONFIG_FILES variable and append each file to the jq command
+CONFIG_ARGS=""
 IFS=',' read -r -a config_files <<< "$MYCROFT_CONFIG_FILES"
 for file in "${config_files[@]}"; do
   CONFIG_ARGS="$CONFIG_ARGS /mounted-github-repo/$file"
