@@ -1,9 +1,10 @@
 # This workflow builds and releases Raspberry Pi OS images with OpenVoiceOS modifications.
 # It performs the following steps:
 # 1. Creates a release using the create_release.yml workflow.
-# 2. Builds the base image using the modify_rpi_image.yml workflow.
-# 3. Lists language directories to create a matrix for building language-specific images.
-# 4. Builds language-specific images sequentially using the build_images.yml workflow.
+# 2. Builds the "no-OVOS" base image using the modify_rpi_image.yml workflow.
+# 3. Builds the full base image using the modify_rpi_image.yml workflow.
+# 4. Lists language directories to create a matrix for building language-specific images.
+# 5. Builds language-specific images sequentially using the build_images.yml workflow.
 
 name: Build Release
 
@@ -45,7 +46,7 @@ jobs:
     needs: [create-release, build-no-ovos-image, build-base-image]
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
-      base_image_url: ${{ needs.build-no-ovos-image.outputs.image_url }}
+      base_image_url: ${{ needs.build-build-base-image.outputs.image_url }}
       release_url: ${{ needs.create-release.outputs.release_url }}
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}

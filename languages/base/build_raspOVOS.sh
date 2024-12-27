@@ -32,7 +32,7 @@ echo "The UID for '$USER' is: $TUID"
 
 # Update package list and install necessary tools
 echo "Installing system packages..."
-apt-get install -y --no-install-recommends i2c-tools mpv libssl-dev libfann-dev portaudio19-dev libpulse-dev libcap-dev
+apt-get install -y --no-install-recommends mpv libssl-dev libfann-dev portaudio19-dev libpulse-dev
 
 # splashscreen
 echo "Creating OVOS splashscreen..."
@@ -40,7 +40,8 @@ mkdir -p /opt/ovos
 cp -v /mounted-github-repo/services/splashscreen.png /opt/ovos/splashscreen.png
 cp -v /mounted-github-repo/services/splashscreen.service /etc/systemd/system/splashscreen.service
 chmod 644 /etc/systemd/system/splashscreen.service
-ln -sf /etc/systemd/system/splashscreen.service /etc/systemd/system/multi-user.target.wants/splashscreen.service
+ln -s /etc/systemd/system/splashscreen.service /etc/systemd/system/multi-user.target.wants/splashscreen.service
+
 
 echo "Creating OVOS login ASCII art..."
 cp -v /mounted-github-repo/tuning/etc_issue /etc/issue
@@ -74,13 +75,11 @@ echo "Configuring default skill settings.json..."
 mkdir -p /home/$USER/.config/mycroft/skills
 cp -rv /mounted-github-repo/settings/* /home/$USER/.config/mycroft/skills/
 
-echo "Downloading constraints.txt from $CONSTRAINTS..."
-# TODO - this path will change soon, currently used by ggwave installer to not allow skills to downgrade packages
-DEST="/etc/mycroft/constraints.txt"
-wget -O "$DEST" "$CONSTRAINTS"
 
 # setup ovos-i2csound
 echo "Installing ovos-i2csound..."
+apt-get install -y --no-install-recommends avrdude i2c-tools
+
 git clone https://github.com/OpenVoiceOS/ovos-i2csound /tmp/ovos-i2csound
 
 cp /tmp/ovos-i2csound/i2c.conf /etc/modules-load.d/i2c.conf
@@ -92,7 +91,7 @@ cp /tmp/ovos-i2csound/99-i2c.rules /usr/lib/udev/rules.d/99-i2c.rules
 chmod 644 /etc/systemd/system/i2csound.service
 chmod +x /usr/libexec/ovos-i2csound
 
-ln -sf /etc/systemd/system/i2csound.service /etc/systemd/system/multi-user.target.wants/i2csound.service
+ln -s /etc/systemd/system/i2csound.service /etc/systemd/system/multi-user.target.wants/i2csound.service
 
 echo "Installing admin phal..."
 pip install sdnotify ovos-bus-client ovos-phal ovos-PHAL-plugin-system -c $CONSTRAINTS --break-system-packages
@@ -100,7 +99,7 @@ pip install sdnotify ovos-bus-client ovos-phal ovos-PHAL-plugin-system -c $CONST
 cp -v /mounted-github-repo/services/ovos-admin-phal.service /etc/systemd/system/
 cp -v /mounted-github-repo/services/ovos-systemd-admin-phal /usr/libexec/ovos-systemd-admin-phal
 chmod 644 /etc/systemd/system/ovos-admin-phal.service
-ln -sf /etc/systemd/system/ovos-admin-phal.service /etc/systemd/system/multi-user.target.wants/ovos-admin-phal.service
+ln -s /etc/systemd/system/ovos-admin-phal.service /etc/systemd/system/multi-user.target.wants/ovos-admin-phal.service
 
 echo "Adding ntp sync signal..."
 # emit "system.clock.synced" to the bus
@@ -117,8 +116,8 @@ cp -v /mounted-github-repo/services/ovos-ssh-enabled-signal /usr/libexec/ovos-ss
 echo "Adding shutdown/reboot signals..."
 cp -v /mounted-github-repo/services/ovos-reboot-signal.service /etc/systemd/system/ovos-reboot-signal.service
 cp -v /mounted-github-repo/services/ovos-shutdown-signal.service /etc/systemd/system/ovos-shutdown-signal.service
-ln -sf /etc/systemd/system/ovos-reboot-signal.service /etc/systemd/system/multi-user.target.wants/ovos-reboot-signal.service
-ln -sf /etc/systemd/system/ovos-shutdown-signal.service /etc/systemd/system/multi-user.target.wants/ovos-shutdown-signal.service
+ln -s /etc/systemd/system/ovos-reboot-signal.service /etc/systemd/system/multi-user.target.wants/ovos-reboot-signal.service
+ln -s /etc/systemd/system/ovos-shutdown-signal.service /etc/systemd/system/multi-user.target.wants/ovos-shutdown-signal.service
 cp -v /mounted-github-repo/services/ovos-restart-signal /usr/libexec/ovos-restart-signal
 cp -v /mounted-github-repo/services/ovos-reboot-signal /usr/libexec/ovos-reboot-signal
 cp -v /mounted-github-repo/services/ovos-shutdown-signal /usr/libexec/ovos-shutdown-signal
@@ -141,10 +140,17 @@ uv pip install --no-progress /mounted-github-repo/packages/ggwave-0.4.2-cp311-cp
 
 # install OVOS in venv
 echo "Installing OVOS..."
-uv pip install --no-progress --pre ovos-docs-viewer ovos-utils[extras] ovos-dinkum-listener[extras,linux,onnx] tflite_runtime ovos-audio-transformer-plugin-ggwave ovos-phal[extras,linux] ovos-audio[extras] ovos-gui ovos-core[lgpl,plugins] -c $CONSTRAINTS
+uv pip install --no-progress --pre ovos-docs-viewer ovos-utils[extras] ovos-dinkum-listener[extras,linux,onnx] tflite_runtime ovos-audio-transformer-plugin-ggwave ovos-phal ovos-audio[extras] ovos-gui ovos-core[lgpl,plugins] -c $CONSTRAINTS
 
 echo "Installing skills..."
 uv pip install --no-progress --pre ovos-core[skills-essential,skills-audio,skills-media,skills-internet,skills-extra]
+
+echo "Installing PHAL plugins..."
+# TODO - mk1 plugin once its validator is fixed
+uv pip install --no-progress --pre ovos-phal[extras,linux] ovos-PHAL-plugin-dotstar
+
+echo "Installing OVOS Spotify..."
+uv pip install --no-progress --pre ovos-media-plugin-spotify ovos-skill-spotify
 
 # some skills import from these libs and dont have them as dependencies
 # just until that is fixed...
@@ -153,10 +159,6 @@ uv pip install --no-progress --pre ovos-lingua-franca ovos-backend-client -c $CO
 
 echo "Caching nltk resources..."
 cp -rv /mounted-github-repo/packages/nltk_data /home/$USER/
-
-# TODO - once it works properly
-#echo "Installing OVOS Spotifyd..."
-#bash /mounted-github-repo/packages/setup_spotify.sh
 
 # no balena for now, let's use ggwave instead
 #echo "Installing Balena wifi plugin..."
@@ -174,6 +176,7 @@ cp -v /mounted-github-repo/services/ovos-systemd-audio /usr/libexec/ovos-systemd
 cp -v /mounted-github-repo/services/ovos-systemd-listener /usr/libexec/ovos-systemd-listener
 cp -v /mounted-github-repo/services/ovos-systemd-phal /usr/libexec/ovos-systemd-phal
 cp -v /mounted-github-repo/services/ovos-systemd-gui /usr/libexec/ovos-systemd-gui
+cp -v /mounted-github-repo/services/ovos-librespot /usr/libexec/ovos-librespot
 
 mkdir -p /home/$USER/.config/systemd/user/
 cp -v /mounted-github-repo/services/ovos.service /home/$USER/.config/systemd/user/
@@ -184,6 +187,7 @@ cp -v /mounted-github-repo/services/ovos-listener.service /home/$USER/.config/sy
 cp -v /mounted-github-repo/services/ovos-phal.service /home/$USER/.config/systemd/user/
 cp -v /mounted-github-repo/services/ovos-gui.service /home/$USER/.config/systemd/user/
 cp -v /mounted-github-repo/services/ovos-ggwave.service /home/$USER/.config/systemd/user/
+cp -v /mounted-github-repo/services/ovos-spotify.service /home/$USER/.config/systemd/user/
 
 # Set permissions for services
 chmod 644 /home/$USER/.config/systemd/user/*.service
@@ -191,19 +195,19 @@ chmod +x /usr/libexec/ovos-*
 
 # Enable services manually by creating symbolic links
 mkdir -p /home/$USER/.config/systemd/user/default.target.wants/
-ln -sf /home/$USER/.config/systemd/user/ovos.service /home/$USER/.config/systemd/user/default.target.wants/ovos.service
-ln -sf /home/$USER/.config/systemd/user/ovos-skills.service /home/$USER/.config/systemd/user/default.target.wants/ovos-skills.service
-ln -sf /home/$USER/.config/systemd/user/ovos-messagebus.service /home/$USER/.config/systemd/user/default.target.wants/ovos-messagebus.service
-ln -sf /home/$USER/.config/systemd/user/ovos-audio.service /home/$USER/.config/systemd/user/default.target.wants/ovos-audio.service
-ln -sf /home/$USER/.config/systemd/user/ovos-listener.service /home/$USER/.config/systemd/user/default.target.wants/ovos-listener.service
-ln -sf /home/$USER/.config/systemd/user/ovos-phal.service /home/$USER/.config/systemd/user/default.target.wants/ovos-phal.service
-ln -sf /home/$USER/.config/systemd/user/ovos-gui.service /home/$USER/.config/systemd/user/default.target.wants/ovos-gui.service
-ln -sf /home/$USER/.config/systemd/user/ovos-ggwave.service /home/$USER/.config/systemd/user/default.target.wants/ovos-ggwave.service
+ln -s /home/$USER/.config/systemd/user/ovos.service /home/$USER/.config/systemd/user/default.target.wants/ovos.service
+ln -s /home/$USER/.config/systemd/user/ovos-skills.service /home/$USER/.config/systemd/user/default.target.wants/ovos-skills.service
+ln -s /home/$USER/.config/systemd/user/ovos-messagebus.service /home/$USER/.config/systemd/user/default.target.wants/ovos-messagebus.service
+ln -s /home/$USER/.config/systemd/user/ovos-audio.service /home/$USER/.config/systemd/user/default.target.wants/ovos-audio.service
+ln -s /home/$USER/.config/systemd/user/ovos-listener.service /home/$USER/.config/systemd/user/default.target.wants/ovos-listener.service
+ln -s /home/$USER/.config/systemd/user/ovos-phal.service /home/$USER/.config/systemd/user/default.target.wants/ovos-phal.service
+ln -s /home/$USER/.config/systemd/user/ovos-gui.service /home/$USER/.config/systemd/user/default.target.wants/ovos-gui.service
+ln -s /home/$USER/.config/systemd/user/ovos-ggwave.service /home/$USER/.config/systemd/user/default.target.wants/ovos-ggwave.service
+ln -s /home/$USER/.config/systemd/user/ovos-spotify.service /home/$USER/.config/systemd/user/default.target.wants/ovos-spotify.service
 
 echo "Ensuring permissions for $USER user..."
 # Replace 1000:1000 with the correct UID:GID if needed
 chown -R $TUID:$TGID /home/$USER
-
 
 echo "Cleaning up apt packages..."
 apt-get --purge autoremove -y && apt-get clean

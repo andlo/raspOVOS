@@ -91,9 +91,12 @@ touch /var/lib/userconf-pi/autologin
 # Update package list and install necessary tools
 echo "Updating base system..."
 apt-get update
-apt-get install -y --no-install-recommends jq git unzip curl build-essential fake-hwclock userconf-pi swig python3-dev python3-pip fbi
+apt-get install -y --no-install-recommends jq git unzip curl build-essential fake-hwclock userconf-pi swig python3-dev python3-pip fbi libasound2-dev
 # what else can be removed to make the system even lighter?
 apt purge -y cups ppp
+
+echo "Setting up libcamera..."
+apt install -y python3-libcamera python3-kms++ libcap-dev
 
 echo "Setting rfkill default value..."
 cp -v /mounted-github-repo/tuning/rfkill_default.conf /etc/modprobe.d/rfkill_default.conf
@@ -106,6 +109,9 @@ bash /mounted-github-repo/packages/setup_pipewire.sh
 
 echo "Installing KDEConnect..."
 bash /mounted-github-repo/packages/setup_kdeconnect.sh
+
+echo "Installing Librespot..."
+bash /mounted-github-repo/packages/setup_spotify.sh
 
 #echo "Installing Balena Wifi-connect..."
 #bash /mounted-github-repo/packages/setup_balena_wifi.sh

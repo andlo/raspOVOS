@@ -43,6 +43,10 @@ on:
         description: 'The constraints file'
         required: false
         type: string
+      intent_cache:
+        description: 'The intent cache'
+        required: false
+        type: string
     outputs:
       image_path:
         description: 'The path to the modified image'
@@ -58,6 +62,7 @@ on:
         value: ${{ jobs.modify-rpi-image.outputs.image_sha256sum }}
 jobs:
   modify-rpi-image:
+    name: Modify RPi Image ${{ inputs.image_path }}
     runs-on: ubuntu-latest
     outputs:
       image_path: ${{ steps.output-variables.outputs.image_path }}
@@ -116,6 +121,7 @@ jobs:
           HOSTNAME: "raspOVOS"
           CONSTRAINTS: ${{ inputs.constraints }} 
           MYCROFT_CONFIG_FILES: ${{ inputs.mycroft_config_files }}
+          IMTENT_CACHE: ${{ inputs.intent_cache }}
         with:
           base-image-url: ${{ steps.check-base-image-url.outputs.base_image_url }}
           image-path: ${{ inputs.image_path }}
