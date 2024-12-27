@@ -111,7 +111,7 @@ echo "Installing KDEConnect..."
 bash /mounted-github-repo/packages/setup_kdeconnect.sh
 
 echo "Installing Librespot..."
-bash /mounted-github-repo/packages/setup_spotify.sh
+#bash /mounted-github-repo/packages/setup_spotify.sh
 
 #echo "Installing Balena Wifi-connect..."
 #bash /mounted-github-repo/packages/setup_balena_wifi.sh
