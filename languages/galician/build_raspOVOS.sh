@@ -15,10 +15,6 @@ echo "Setting up default wifi country..."
 
 # Install aditional packages
 # add here the packages you need to install
-echo "Caching pre-trained padatious intents..."
-mkdir -p /home/$USER/.local/share/mycroft/intent_cache
-cp -rv /mounted-github-repo/intent_cache/ca-ES /home/$USER/.local/share/mycroft/intent_cache/
-
 echo "Installing Catalan specific skills"
 uv pip install --no-progress ovos-skill-fuster-quotes
 
