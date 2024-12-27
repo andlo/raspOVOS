@@ -82,7 +82,6 @@ jobs:
       - name: Check if Required Files Exist
         id: check-files
         run: |
-          echo "skip_steps=false" >> $GITHUB_OUTPUT
           if [ ! -f "${{ inputs.script_path }}" ]; then
             echo "Script file ${{ inputs.script_path }} does not exist."
             echo "skip_steps=true" >> $GITHUB_OUTPUT
@@ -121,7 +120,7 @@ jobs:
             echo "image_url=${{inputs.release_url}}/${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
           else
             echo "Image does not exist at $image_url"
-            echo "skip_create_image=true" >> $GITHUB_OUTPUT
+            echo "skip_create_image=false >> $GITHUB_OUTPUT
           fi
 
       - name: Tune base Raspberry Pi OS Bookworm
