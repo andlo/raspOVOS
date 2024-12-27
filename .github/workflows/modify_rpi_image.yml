@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image_path: ${{ steps.create-image.outputs.image-path }}.xz
-      image_url: ${{ inputs.release_url }}/${{ steps.create-image.outputs.image-path }}.xz
+      image_url: ${{ inputs.release_url }}/${{ $image_path }}.xz
       image_size: ${{ steps.create-image.outputs.image-size }}
       image_sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}
     steps:
@@ -117,7 +117,7 @@ jobs:
             echo "skip_create_image=true" >> $GITHUB_OUTPUT
             echo "image_url=$image_url" >> $GITHUB_OUTPUT
             echo "image_path=${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
-            echo "image_url=${{inputs.release_url}}/${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
+            echo "image_url=${{ inputs.release_url }}/${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
           else
             echo "Image does not exist at $image_url"
             echo "skip_create_image=false" >> $GITHUB_OUTPUT
@@ -142,6 +142,16 @@ jobs:
           mount-repository: true
           env-vars: USER,PASSWORD,HOSTNAME,CONSTRAINTS,MYCROFT_CONFIG_FILES
           script-path: ${{ inputs.script_path }}
+
+      - name: Output Variables
+        run: |
+          if [ "${{ steps.create-image.outputs.image-path }}" == "" ]; then
+            echo "image_path= ${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
+            echo "image_url=${{ inputs.release_url }}/${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
+          else
+            echo "image_path=${{ steps.create-image.outputs.image-path }}.xz" >> $GITHUB_OUTPUT
+            echo "image_url=${{ inputs.release_url }}/${{ steps.create-image.outputs.image-path }}.xz" >> $GITHUB_OUTPUT
+          fi
   
       - name: Upload to release
         if: ${{steps.create-image.outputs.image-path != ''}}  
