@@ -142,9 +142,16 @@ jobs:
           env-vars: USER,PASSWORD,HOSTNAME,CONSTRAINTS,MYCROFT_CONFIG_FILES
           script-path: ${{ inputs.script_path }}
   
-      - name: Set output image URL and path
+      - name: Set output image URL and path if image was created
+        if: ${{ steps.check-image.outputs.skip_create_image == 'false' }}
+        id: image-url-path-created
+        run: |
+          echo "image-url=${{ inputs.release_url }}/${{ steps.create-image.outputs.image-path }}.xz" >> $GITHUB_OUTPUT
+          echo "image-path=${{ steps.create-image.outputs.image-path }}.xz" >> $GITHUB_OUTPUT
+
+      - name: Set output image URL and path if image already exists
         if: ${{ steps.check-image.outputs.skip_create_image == 'true' }}
-        id: image-url-path
+        id: image-url-path-already-exists
         run: |
           echo "image-url=${{ inputs.release_url }}/${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
           echo "image-path=${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT

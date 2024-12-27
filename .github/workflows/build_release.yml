@@ -38,7 +38,7 @@ jobs:
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image_path: raspOVOS-BASE-bookworm-arm64-lite.img
       mycroft_config_files: "./languages/default/mycroft.conf"
-      script_path: ./languages/default/build_raspOVOS.sh
+      script_path: ./languages/base/build_raspOVOS.sh
       constraints: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
 
   list-languages:
@@ -53,7 +53,7 @@ jobs:
       - name: List language directories
         id: list-dirs
         run: |
-          dirs=$(ls -d ./languages/*/ | grep -v './languages/base/')
+          dirs=$(ls -d ./languages/*/ | grep -v './languages/base/' | grep -v './languages/default/')
           dirs_json=$(echo $dirs | sed 's|./languages/||g' | sed 's|/||g' | tr '\n' ' ' | jq -R -s -c 'split(" ") | map(select(length > 0))')
           echo "matrix=$dirs_json" >> $GITHUB_OUTPUT
           echo "matrix=$dirs_json"
