@@ -18,16 +18,16 @@ uv pip install --no-progress ovos-PHAL[mk2] -c $CONSTRAINTS
 pip3 install git+https://github.com/NeonGeckoCom/sj201-interface
 
 # VocalFusion SJ201 drivers
-cd /home/ovos
-git clone https://github.com/OpenVoiceOS/VocalFusionDriver
-cd VocalFusionDriver/driver
-make all
-kernel=$(uname -r)
-mkdir -p "/lib/modules/${kernel}/kernel/drivers/vocalfusion"
-cp vocalfusion* "/lib/modules/${kernel}/kernel/drivers/vocalfusion"
-cd /home/ovos
-rm -rf VocalFusionDriver
-depmod "${kernel}" -a
+#cd /home/ovos
+#git clone https://github.com/OpenVoiceOS/VocalFusionDriver
+#cd VocalFusionDriver/driver
+#make all
+#kernel=$(uname -r)
+#mkdir -p "/lib/modules/${kernel}/kernel/drivers/vocalfusion"
+#cp vocalfusion* "/lib/modules/${kernel}/kernel/drivers/vocalfusion"
+#cd /home/ovos
+#rm -rf VocalFusionDriver
+#depmod "${kernel}" -a
 
 # cp -v /mounted-github-repo/mark2/files/sj201-daemon.conf "/etc/pulse/daemon.conf.d/sj201-daemon.conf"
 # chmod 0644 /etc/pulse/daemon.conf.d/sj201-daemon.conf

@@ -69,7 +69,7 @@ jobs:
       constraints: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
          
   list-languages:
-    needs: [create-release, build-no-ovos-image, build-base-image, build-gui-image]
+    needs: [create-release, build-no-ovos-image, build-base-image, build-gui-image, build-mk2-image]
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.list-dirs.outputs.matrix }}
