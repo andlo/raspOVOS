@@ -27,7 +27,7 @@ jobs:
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image_path: raspOVOS-NO-OVOS-bookworm-arm64-lite.img
-      script_path: ./languages/base/build_base.sh
+      script_path: ./base/build_base.sh
 
   build-base-image:
     needs: [create-release, build-no-ovos-image]
@@ -38,8 +38,8 @@ jobs:
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image_path: raspOVOS-bookworm-arm64-lite.img
-      mycroft_config_files: "./languages/base/mycroft.conf"
-      script_path: ./languages/base/build_raspOVOS.sh
+      mycroft_config_files: "./base/mycroft.conf"
+      script_path: ./base/build_raspOVOS.sh
       constraints: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
 
   build-gui-image:
@@ -51,8 +51,8 @@ jobs:
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       image_path: raspOVOS-GUI-bookworm-arm64-lite.img
-      mycroft_config_files: "./languages/base/mycroft.conf,./languages/base/mycroft_gui.conf"
-      script_path: ./languages/base/build_raspOVOS_gui.sh
+      mycroft_config_files: "./base/mycroft.conf,./base/mycroft_gui.conf"
+      script_path: ./base/build_raspOVOS_gui.sh
       constraints: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
 
   list-languages:
