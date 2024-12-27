@@ -45,7 +45,7 @@ jobs:
       release_id: ${{ inputs.release_id }}
       cache_key: ${{ inputs.cache_key }}
       image_path: raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img 
-      mycroft_config_files: "./languages/base/mycroft.conf,./languages/${{ inputs.languages }}/mycroft.conf" 
+      mycroft_config_files: "./base/mycroft.conf,./languages/${{ inputs.languages }}/mycroft.conf" 
       script_path: ./languages/${{ inputs.languages }}/build_raspOVOS.sh 
       constraints: https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt
       intent_cache: /languages/${{ inputs.languages }}/intent_cache
@@ -60,7 +60,7 @@ jobs:
       release_id: ${{ inputs.release_id }}
       cache_key: ${{ inputs.cache_key }}
       image_path: raspOVOS-${{ inputs.languages }}-GUI-bookworm-arm64-lite.img
-      mycroft_config_files: "./languages/base/mycroft.conf,./languages/base/mycroft_gui.conf,./languages/${{ inputs.languages }}/mycroft.conf,./languages/${{ inputs.languages }}/mycroft_gui.conf" 
+      mycroft_config_files: "./base/mycroft.conf,./languages/base/mycroft_gui.conf,./languages/${{ inputs.languages }}/mycroft.conf,./languages/${{ inputs.languages }}/mycroft_gui.conf" 
       script_path: ./languages/${{ inputs.languages }}/build_raspOVOS_gui.sh 
       constraints: https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt
       intent_cache: /languages/${{ inputs.languages }}/intent_cache
