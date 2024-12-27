@@ -60,8 +60,8 @@ jobs:
   modify-rpi-image:
     runs-on: ubuntu-latest
     outputs:
-      image_path: ${{ steps.create-image.outputs.image-path }}.xz
-      image_url: ${{ inputs.release_url }}/${{ $image_path }}.xz
+      image_path: ${{ steps.output-variables.outputs.image_path }}
+      image_url: ${{ steps.output-variables.outputs.image_url }}
       image_size: ${{ steps.create-image.outputs.image-size }}
       image_sha256sum: ${{ steps.create-image.outputs.image-sha256sum }}
     steps:
@@ -144,6 +144,7 @@ jobs:
           script-path: ${{ inputs.script_path }}
 
       - name: Output Variables
+        id: output-variables
         run: |
           if [ "${{ steps.create-image.outputs.image-path }}" == "" ]; then
             echo "image_path= ${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
