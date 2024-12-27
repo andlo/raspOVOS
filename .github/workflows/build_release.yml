@@ -54,7 +54,6 @@ jobs:
       script_path: ./languages/base/build_raspOVOS_gui.sh
       constraints: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
      
-
   list-languages:
     needs: [create-release, build-no-ovos-image, build-base-image, build-gui-image]
     runs-on: ubuntu-latest
