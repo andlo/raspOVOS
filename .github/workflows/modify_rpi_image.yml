@@ -125,7 +125,7 @@ jobs:
           fi
 
       - name: Tune base Raspberry Pi OS Bookworm
-        if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
+        if: ${{ skip_steps == 'false' }}
         uses: TigreGotico/rpi-image-modifier@main
         id: create-image
         env:
@@ -145,7 +145,7 @@ jobs:
           script-path: ${{ inputs.script_path }}
   
       - name: Upload to release
-        if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
+        if: ${{skip_steps == 'false'}}
         uses: xresloader/upload-to-github-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
