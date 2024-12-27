@@ -62,7 +62,7 @@ on:
         value: ${{ jobs.modify-rpi-image.outputs.image_sha256sum }}
 jobs:
   modify-rpi-image:
-    name: Modify RPi Image ${{ inputs.image_path }}
+    name: Make ${{ inputs.image_path }}
     runs-on: ubuntu-latest
     outputs:
       image_path: ${{ steps.output-variables.outputs.image_path }}
@@ -111,7 +111,7 @@ jobs:
             echo "skip_create_image=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Tune base Raspberry Pi OS Bookworm
+      - name: Modify base image
         if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
         uses: TigreGotico/rpi-image-modifier@main
         id: create-image
@@ -137,10 +137,10 @@ jobs:
         run: |
           if [ "${{ steps.create-image.outputs.image-path }}" == "" ]; then
             echo "image_path= ${{ inputs.image_path }}" >> $GITHUB_OUTPUT
-            echo "image_url=${{ inputs.release_url }}/${{ inputs.image_path }}" >> $GITHUB_OUTPUT
+            echo "image_url=${{ inputs.release_url }}/${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
           else
             echo "image_path=${{ steps.create-image.outputs.image-path }}" >> $GITHUB_OUTPUT
-            echo "image_url=${{ inputs.release_url }}/${{ steps.create-image.outputs.image-path }}.xz" >> $GITHUB_OUTPUT
+            echo "image_url=${{ inputs.release_url }}/${{ steps.create-image.outputs.image-path }}" >> $GITHUB_OUTPUT
           fi
   
       - name: Upload to release
