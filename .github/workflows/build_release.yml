@@ -73,7 +73,7 @@ jobs:
           echo "matrix=$dirs_json"
 
   build-images:
-    needs: [create-release, build-no-ovos-image, build-base-image, list-languages]
+    needs: [create-release, build-no-ovos-image, build-base-image, build-gui-image, list-languages]
     strategy:
       matrix:
         language: ${{ fromJson(needs.list-languages.outputs.matrix) }}
