@@ -52,6 +52,7 @@ jobs:
 
   build-gui-image:
     name: Build GUI Image
+    needs: build-headles-image
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
       base_image_url: ${{inputs.base_image_gui_url}}
