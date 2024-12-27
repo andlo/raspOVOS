@@ -28,6 +28,22 @@ on:
         required: true
         type: string 
 jobs:
+  create-image-path:
+    runs-on: ubuntu-latest
+    outputs:
+      image-path: ${{ steps.set-image-path.outputs.image-path }}
+    steps:
+      - name: Set image path
+        id: set-image-path
+        run: | 
+          if [ "${{ inputs.language }}" == '' ]; then
+            echo "image_path=raspOVOS-bookworm-arm64-lite.img" >> $GITHUB_OUTPUT
+            echo "image_gui_path=raspOVOS-GUI-bookworm-arm64-lite.img" >> $GITHUB_OUTPUT
+          else
+            echo "image_path=raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img" >> $GITHUB_OUTPUT
+            echo "image_gui_path=raspOVOS-${{ inputs.languages }}-GUI-bookworm-arm64-lite.img" >> $GITHUB_OUTPUT
+          fi
+
   build-headles-image:
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
@@ -35,7 +51,7 @@ jobs:
       release_url: ${{ inputs.release_url}}
       release_id: ${{ inputs.release_id }}
       cache_key: ${{ inputs.cache_key }}
-      image_path: "raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img"
+      image_path: ${{ steps.create-image-path.outputs.image-path }}
       mycroft_config_files: "./languages/base/mycroft.conf,./languages/${{ inputs.languages }}/mycroft.conf" 
       script_path: ./languages/${{ inputs.languages }}/build_raspOVOS.sh 
       constraints: https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt
@@ -48,7 +64,7 @@ jobs:
       release_url: ${{ inputs.release_url}}
       release_id: ${{ inputs.release_id }}
       cache_key: ${{ inputs.cache_key }}
-      image_path: "raspOVOS-${{ inputs.languages }}-GUI-bookworm-arm64-lite.img"
+      image_path: ${{ steps.create-image-path.outputs.image-gui-path }}
       mycroft_config_files: "./languages/base/mycroft.conf,./languages/base/mycroft_gui.conf,./languages/${{ inputs.languages }}/mycroft.conf,./languages/${{ inputs.languages }}/mycroft_gui.conf" 
       script_path: ./languages/${{ inputs.languages }}/build_raspOVOS_gui.sh 
       constraints: https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt

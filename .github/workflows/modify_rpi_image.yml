@@ -132,7 +132,7 @@ jobs:
             echo "image_path= ${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
             echo "image_url=${{ inputs.release_url }}/${{ inputs.image_path }}.xz" >> $GITHUB_OUTPUT
           else
-            echo "image_path=${{ steps.create-image.outputs.image-path }}.xz" >> $GITHUB_OUTPUT
+            echo "image_path=${{ steps.create-image.outputs.image-path }}" >> $GITHUB_OUTPUT
             echo "image_url=${{ inputs.release_url }}/${{ steps.create-image.outputs.image-path }}.xz" >> $GITHUB_OUTPUT
           fi
   
