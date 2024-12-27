@@ -27,46 +27,37 @@ on:
         description: 'The languages'
         required: false
         type: string 
+      base_image_url: 
+        description: 'The URL of the base image'
+        required: true
+        type: string
+      base_image_gui_url:
+        description: 'The URL of the base GUI image'
+        required: true
+        type: string
 jobs:
-  create-image-path:
-    runs-on: ubuntu-latest
-    outputs:
-      image_path: ${{ steps.set-image-path.outputs.image_path }}
-      image_gui_path: ${{ steps.set-image-path.outputs.image_gui-path }}
-    steps:
-      - name: Set image path
-        id: set-image-path
-        run: | 
-          if [ "${{ inputs.languages }}" == '' ]; then
-            echo "image_path=raspOVOS-bookworm-arm64-lite.img" >> $GITHUB_OUTPUT
-            echo "image_gui_path=raspOVOS-GUI-bookworm-arm64-lite.img" >> $GITHUB_OUTPUT
-          else
-            echo "image_path=raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img" >> $GITHUB_OUTPUT
-            echo "image_gui_path=raspOVOS-${{ inputs.languages }}-GUI-bookworm-arm64-lite.img" >> $GITHUB_OUTPUT
-          fi
-
   build-headles-image:
-    needs: create-image-path
+    name: Build Headless Image
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
-      base_image_url: ${{ inputs.release_url}}/raspOVOS-bookworm-arm64-lite.img
+      base_image_url: ${{ inputs.base_image_url }}
       release_url: ${{ inputs.release_url}}
       release_id: ${{ inputs.release_id }}
       cache_key: ${{ inputs.cache_key }}
-      image_path: ${{ needs.create-image-path.outputs.image_path }}
+      image_path: raspOVOS-${{ inputs.languages }}-bookworm-arm64-lite.img 
       mycroft_config_files: "./languages/base/mycroft.conf,./languages/${{ inputs.languages }}/mycroft.conf" 
       script_path: ./languages/${{ inputs.languages }}/build_raspOVOS.sh 
       constraints: https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt
 
   build-gui-image:
-    needs: create-image-path
+    name: Build GUI Image
     uses: ./.github/workflows/modify_rpi_image.yml
     with:
-      base_image_url: ${{ inputs.release_url}}/raspOVOS-GUI-bookworm-arm64-lite.img
+      base_image_url: ${{inputs.base_image_gui_url}}
       release_url: ${{ inputs.release_url}}
       release_id: ${{ inputs.release_id }}
       cache_key: ${{ inputs.cache_key }}
-      image_path: ${{ needs.create-image-path.outputs.image_gui_path }}
+      image_path: raspOVOS-${{ inputs.languages }}-GUI-bookworm-arm64-lite.img
       mycroft_config_files: "./languages/base/mycroft.conf,./languages/base/mycroft_gui.conf,./languages/${{ inputs.languages }}/mycroft.conf,./languages/${{ inputs.languages }}/mycroft_gui.conf" 
       script_path: ./languages/${{ inputs.languages }}/build_raspOVOS_gui.sh 
       constraints: https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt

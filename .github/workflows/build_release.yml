@@ -83,3 +83,5 @@ jobs:
       release_id: ${{ needs.create-release.outputs.release_id }}
       cache_key: ${{ needs.create-release.outputs.cache_key }}
       languages: ${{ matrix.language }}
+      base_image_url: ${{ needs.build-base-image.outputs.image_url }}
+      base_image_gui_url: ${{ needs.build-gui-image.outputs.image-url }}
