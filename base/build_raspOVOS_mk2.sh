@@ -35,7 +35,7 @@ if [[ "$RPI_VERSION" == *"Raspberry Pi 5"* ]]; then
   IS_RPI5="-pi5"
 fi
 for DTBO_FILE in sj201 sj201-buttons-overlay sj201-rev10-pwm-fan-overlay; do
-  cp "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/$DTBO_FILE$IS_RPI5.dtbo" "/boot/overlays/"
+  cp "$DTBO_FILE$IS_RPI5.dtbo" "/boot/overlays/"
 done
 
 # Manage sj201, buttons, and PWM overlays
