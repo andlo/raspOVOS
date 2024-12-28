@@ -16,9 +16,6 @@ uv pip install --no-progress ovos-PHAL[mk2] -c $CONSTRAINTS
 
 echo "Installing SJ201 drivers..."
 # Variables
-OVOS_HARDWARE_MARK2_VOCALFUSION_REPO_URL="https://github.com/OpenVoiceOS/VocalFusionDriver/"
-OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH="/home/$USER/VocalFusionDriver"
-OVOS_HARDWARE_MARK2_VOCALFUSION_BRANCH="main"
 RPI_VERSION="Raspberry Pi 4" # Adjust this based on your Raspberry Pi version
 #OVOS_INSTALLER_USER_HOME="/home/ovos"
 #OVOS_INSTALLER_USER="your_user_here"
@@ -29,7 +26,6 @@ BOOT_DIRECTORY="/boot"
 
 # Clone VocalFusionDriver Git repository
 echo "Cloning VocalFusionDriver Git repository..."
-git clone --branch "$OVOS_HARDWARE_MARK2_VOCALFUSION_BRANCH" "$OVOS_HARDWARE_MARK2_VOCALFUSION_REPO_URL" "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH"
 git clone https://github.com/OpenVoiceOS/VocalFusionDriver/
 cd /home/$USER/VocalFusionDriver/
 
@@ -38,7 +34,6 @@ echo "Copying DTBO files to /boot/overlays..."
 for DTBO_FILE in sj201 sj201-buttons-overlay sj201-rev10-pwm-fan-overlay; do
   cp "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/$DTBO_FILE" "/boot/overlays/"
 done
-cd /home/$USER
 
 # Manage sj201, buttons, and PWM overlays
 echo "Managing sj201, buttons, and PWM overlays..."
@@ -47,6 +42,7 @@ for DTO_OVERLAY in sj201 sj201-buttons-overlay sj201-rev10-pwm-fan-overlay; do
     echo "dtoverlay=$DTO_OVERLAY" >> "$BOOT_DIRECTORY/config.txt"
   fi
 done
+cd /home/$USER
 
 cat <<EOF > /usr/local/bin/update_vocalfusiondriver_if_kernel_updated.sh
 #!/bin/bash
