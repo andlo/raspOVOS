@@ -26,7 +26,7 @@ BOOT_DIRECTORY="/boot"
 
 # Clone VocalFusionDriver Git repository
 echo "Cloning VocalFusionDriver Git repository..."
-git clone https://github.com/OpenVoiceOS/VocalFusionDriver/
+git clone https://github.com/OpenVoiceOS/VocalFusionDriver/ /home/$USER/VocalFusionDriver/
 cd /home/$USER/VocalFusionDriver/
 
 # Copy DTBO files to /boot/overlays
