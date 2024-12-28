@@ -67,6 +67,7 @@ jobs:
       mycroft_config_files: "./base/mycroft.conf,./base/mycroft_gui.conf"
       script_path: ./base/build_raspOVOS_mk2.sh
       constraints: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
+      update-image: true
          
   list-languages:
     needs: [create-release, build-no-ovos-image, build-base-image, build-gui-image, build-mk2-image]
