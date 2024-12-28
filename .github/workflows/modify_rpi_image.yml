@@ -63,7 +63,7 @@ on:
 jobs:
   modify-rpi-image:
     name: Make ${{ inputs.image_path }}
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     outputs:
       image_path: ${{ steps.output-variables.outputs.image_path }}
       image_url: ${{ steps.output-variables.outputs.image_url }}

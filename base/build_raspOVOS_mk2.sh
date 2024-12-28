@@ -40,15 +40,26 @@ done
 # Manage sj201, buttons, and PWM overlays
 echo "Managing sj201, buttons, and PWM overlays..."
 for DTO_OVERLAY in sj201 sj201-buttons-overlay sj201-rev10-pwm-fan-overlay; do
-  if ! grep -q "^dtoverlay=$DTO_OVERLAY$IS_RPI5" "$BOOT_DIRECTORY/config.txt"; then
-    echo "dtoverlay=$DTO_OVERLAY$IS_RPI5" >> "$BOOT_DIRECTORY/config.txt"
+  if ! grep -q "^dtoverlay=$DTO_OVERLAY" "$BOOT_DIRECTORY/config.txt"; then
+    echo "dtoverlay=$DTO_OVERLAY" >> "$BOOT_DIRECTORY/config.txt"
   fi
 done
 
 # Build vocalfusion-soundcard.ko kernel module
-echo "Building vocalfusion-soundcard.ko kernel module..."
-cd "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/driver"
-make -j "$PROCESSOR_COUNT" KDIR="/lib/modules/$KERNEL/build" all
+#echo "Building vocalfusion-soundcard.ko kernel module..."
+#cd "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/driver"
+#make -j "$PROCESSOR_COUNT" KDIR="/lib/modules/$KERNEL/build" all
+
+url="https://github.com/andlo/VocalFusionDriver/releases/download/VocalFussionDriver-6.6.51%2Brpt-rpi-v8/vocalfusion-soundcard.ko"
+destination_dir="/lib/modules/$(uname -r)"
+curl -L "$url" -o "$destination_dir/vocalfusion-soundcard.ko"
+
+# Update module dependencies
+sudo depmod
+
+echo "Downloaded and copied vocalfusion-soundcard.ko to $destination_dir"
+
+
 
 # Copy vocalfusion-soundcard.ko to /lib/modules/$KERNEL
 echo "Copying vocalfusion-soundcard.ko to /lib/modules/$KERNEL..."
