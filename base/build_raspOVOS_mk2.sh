@@ -35,12 +35,8 @@ BOOT_DIRECTORY="/boot"
 git clone --branch "$OVOS_HARDWARE_MARK2_VOCALFUSION_BRANCH" "$OVOS_HARDWARE_MARK2_VOCALFUSION_REPO_URL" "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH"
 
 # Copy DTBO files to /boot/overlays
-IS_RPI5=""
-if [[ "$RPI_VERSION" == *"Raspberry Pi 5"* ]]; then
-  IS_RPI5="-pi5"
-fi
 for DTBO_FILE in sj201 sj201-buttons-overlay sj201-rev10-pwm-fan-overlay; do
-  cp "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/$DTBO_FILE$IS_RPI5.dtbo" "/boot/overlays/"
+  cp "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/$DTBO_FILE" "/boot/overlays/"
 done
 
 # Manage sj201, buttons, and PWM overlays
@@ -74,23 +70,21 @@ curl -o /opt/sj201/init_tas5806 "https://raw.githubusercontent.com/MycroftAI/mar
 chmod 0755 /opt/sj201/init_tas5806
 
 # Copy SJ201 systemd unit file
-cat <<EOF > "$OVOS_INSTALLER_USER_HOME/.config/systemd/user/sj201.service"
+cat <<EOF > /home/$USER/.config/systemd/user/sj201.service"
 [Unit]
 Description=SJ201 Service
 
 [Service]
 ExecStart=/opt/sj201/xvf3510-flash
 EOF
-chown "$OVOS_INSTALLER_USER:$OVOS_INSTALLER_GROUP" "$OVOS_INSTALLER_USER_HOME/.config/systemd/user/sj201.service"
-chmod 0644 "$OVOS_INSTALLER_USER_HOME/.config/systemd/user/sj201.service"
+chown "$USER:$USER" "/home/$USER/.config/systemd/user/sj201.service"
+chmod 0644 "/home/$USER/.config/systemd/user/sj201.service"
 
 # Enable SJ201 systemd unit
-sudo -u "$OVOS_INSTALLER_USER" systemctl --user enable sj201.service --force
+sudo -u "$USER" systemctl --user enable sj201.service --force
 
 # Delete source path once compiled
 rm -rf "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH"
-
-
 
 
 
