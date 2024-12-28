@@ -45,23 +45,69 @@ for DTO_OVERLAY in sj201 sj201-buttons-overlay sj201-rev10-pwm-fan-overlay; do
   fi
 done
 
-# Build vocalfusion-soundcard.ko kernel module
-#echo "Building vocalfusion-soundcard.ko kernel module..."
-#cd "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/driver"
-#make -j "$PROCESSOR_COUNT" KDIR="/lib/modules/$KERNEL/build" all
+cat <<EOF > /usr/local/bin/update_vocalfusiondriver_if_kernel_updated.sh
+#!/bin/bash
 
-# Copy vocalfusion-soundcard.ko to /lib/modules/$KERNEL
-echo "Copying vocalfusion-soundcard.ko to /lib/modules/$KERNEL..."
-url="https://github.com/andlo/VocalFusionDriver/releases/download/VocalFussionDriver-6.6.51%2Brpt-rpi-v8/vocalfusion-soundcard.ko"
-destination_dir="/lib/modules/$(uname -r)"
-curl -L "$url" -o "$destination_dir/vocalfusion-soundcard.ko"
+set -e
 
-sudo depmod
+# Define the path to the kernel module source
+MODULE_SRC_PATH="/home/$USER/VocalFusionDriver/driver" # Update this path
 
-# Copy vocalfusion-soundcard.ko to /lib/modules/$KERNEL
-#echo "Copying vocalfusion-soundcard.ko to /lib/modules/$KERNEL..."
-#cp "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/driver/vocalfusion-soundcard.ko" "/lib/modules/$KERNEL/vocalfusion-soundcard.ko"
-#depmod
+# File to store the last kernel version
+KERNEL_VERSION_FILE="/var/lib/vocalfusion/last_kernel_version"
+
+# Create directory for storing the kernel version if it doesn't exist
+mkdir -p /var/lib/vocalfusion
+
+# Get the current kernel version
+current_kernel=$(uname -r)
+
+# Check if the kernel version file exists
+if [ -f "$KERNEL_VERSION_FILE" ]; then
+  last_kernel=$(cat "$KERNEL_VERSION_FILE")
+else
+  last_kernel=""
+fi
+
+# If the kernel has been updated, or this is the first run, build and install the module
+if [ "$current_kernel" != "$last_kernel" ]; then
+  echo "New kernel detected or first run. Building module for kernel $current_kernel."
+  
+  rm -rf "$MODULE_SRC_PATH"
+  mkdir -p "$MODULE_SRC_PATH"
+  git clone https://github.com/OpenVoiceOS/VocalFusionDriver/
+  
+  cd "$MODULE_SRC_PATH"/driver
+  make clean
+  make -j$(nproc) KDIR=/lib/modules/$current_kernel/build
+
+  # Install the compiled module
+  cp vocalfusion-soundcard.ko /lib/modules/$current_kernel/
+  depmod -a
+
+  # Update the kernel version file
+  echo "$current_kernel" > "$KERNEL_VERSION_FILE"
+
+  echo "Module compiled and installed for kernel $current_kernel."
+else
+  echo "Kernel version has not changed. No need to rebuild the module."
+fi
+EOF
+chmod +x /usr/local/bin/update_vocalfusiondriver_if_kernel_updated.sh
+
+# Create systemd service for updating VocalFusionDriver kernel module
+echo "Creating systemd service for updating VocalFusionDriver kernel module..."
+cat <<EOF > /etc/systemd/system/update-vocalfusiondriver.service
+[Unit]
+Description=Update VocalFusionDriver kernel module
+After=network.target 
+[Service] 
+Type=oneshot 
+ExecStart=/usr/local/bin/update_vocalfusiondriver_if_kernel_updated.sh
+[Install] 
+WantedBy=multi-user.target
+EOF
+chmod 644 /etc/systemd/system/update-vocalfusiondriver.service
 
 # Create /etc/modules-load.d/vocalfusion.conf file
 echo "Creating /etc/modules-load.d/vocalfusion.conf file..."
