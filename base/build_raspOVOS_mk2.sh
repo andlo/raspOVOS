@@ -50,21 +50,18 @@ done
 #cd "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/driver"
 #make -j "$PROCESSOR_COUNT" KDIR="/lib/modules/$KERNEL/build" all
 
+# Copy vocalfusion-soundcard.ko to /lib/modules/$KERNEL
+echo "Copying vocalfusion-soundcard.ko to /lib/modules/$KERNEL..."
 url="https://github.com/andlo/VocalFusionDriver/releases/download/VocalFussionDriver-6.6.51%2Brpt-rpi-v8/vocalfusion-soundcard.ko"
 destination_dir="/lib/modules/$(uname -r)"
 curl -L "$url" -o "$destination_dir/vocalfusion-soundcard.ko"
 
-# Update module dependencies
 sudo depmod
 
-echo "Downloaded and copied vocalfusion-soundcard.ko to $destination_dir"
-
-
-
 # Copy vocalfusion-soundcard.ko to /lib/modules/$KERNEL
-echo "Copying vocalfusion-soundcard.ko to /lib/modules/$KERNEL..."
-cp "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/driver/vocalfusion-soundcard.ko" "/lib/modules/$KERNEL/vocalfusion-soundcard.ko"
-depmod
+#echo "Copying vocalfusion-soundcard.ko to /lib/modules/$KERNEL..."
+#cp "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/driver/vocalfusion-soundcard.ko" "/lib/modules/$KERNEL/vocalfusion-soundcard.ko"
+#depmod
 
 # Create /etc/modules-load.d/vocalfusion.conf file
 echo "Creating /etc/modules-load.d/vocalfusion.conf file..."
