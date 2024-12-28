@@ -47,6 +47,10 @@ on:
         description: 'The intent cache'
         required: false
         type: string
+      update-image:
+        description: 'Forse updating image'
+        required: false
+        type: boolean
     outputs:
       image_path:
         description: 'The path to the modified image'
@@ -110,9 +114,12 @@ jobs:
             echo "Image does not exist at $image_url"
             echo "skip_create_image=false" >> $GITHUB_OUTPUT
           fi
+          if [ "${{ inputs.update-image }}" == "true" ]; then
+            echo "skip_create_image=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Modify base image
-        if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
+        if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' && steps.skip-modify-image.outputs.skip_create_image == 'false' }}
         uses: TigreGotico/rpi-image-modifier@main
         id: create-image
         env:
