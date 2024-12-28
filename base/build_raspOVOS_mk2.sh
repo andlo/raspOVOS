@@ -50,7 +50,7 @@ cat <<EOF > /usr/local/bin/update_vocalfusiondriver_if_kernel_updated.sh
 set -e
 
 # Define the path to the kernel module source
-MODULE_SRC_PATH="/home/$USER/VocalFusionDriver/driver" # Update this path
+MODULE_SRC_PATH="/home/$USER/VocalFusionDriver/driver" 
 
 # File to store the last kernel version
 KERNEL_VERSION_FILE="/var/lib/vocalfusion/last_kernel_version"
@@ -74,7 +74,7 @@ if [ "$current_kernel" != "$last_kernel" ]; then
   
   rm -rf "$MODULE_SRC_PATH"
   mkdir -p "$MODULE_SRC_PATH"
-  git clone https://github.com/OpenVoiceOS/VocalFusionDriver/
+  git clone https://github.com/OpenVoiceOS/VocalFusionDriver/ "$MODULE_SRC_PATH"
   
   cd "$MODULE_SRC_PATH"/driver
   make clean
