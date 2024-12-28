@@ -30,12 +30,15 @@ BOOT_DIRECTORY="/boot"
 # Clone VocalFusionDriver Git repository
 echo "Cloning VocalFusionDriver Git repository..."
 git clone --branch "$OVOS_HARDWARE_MARK2_VOCALFUSION_BRANCH" "$OVOS_HARDWARE_MARK2_VOCALFUSION_REPO_URL" "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH"
+git clone https://github.com/OpenVoiceOS/VocalFusionDriver/
+cd /home/$USER/VocalFusionDriver/
 
 # Copy DTBO files to /boot/overlays
 echo "Copying DTBO files to /boot/overlays..."
 for DTBO_FILE in sj201 sj201-buttons-overlay sj201-rev10-pwm-fan-overlay; do
   cp "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/$DTBO_FILE" "/boot/overlays/"
 done
+cd /home/$USER
 
 # Manage sj201, buttons, and PWM overlays
 echo "Managing sj201, buttons, and PWM overlays..."
