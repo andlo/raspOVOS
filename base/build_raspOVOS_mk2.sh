@@ -30,18 +30,21 @@ git clone https://github.com/OpenVoiceOS/VocalFusionDriver/ /home/$USER/VocalFus
 cd /home/$USER/VocalFusionDriver/
 
 # Copy DTBO files to /boot/overlays
-echo "Copying DTBO files to /boot/overlays..."
+IS_RPI5=""
+if [[ "$RPI_VERSION" == *"Raspberry Pi 5"* ]]; then
+  IS_RPI5="-pi5"
+fi
 for DTBO_FILE in sj201 sj201-buttons-overlay sj201-rev10-pwm-fan-overlay; do
-  cp "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/$DTBO_FILE" "/boot/overlays/"
+  cp "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/$DTBO_FILE$IS_RPI5.dtbo" "/boot/overlays/"
 done
 
 # Manage sj201, buttons, and PWM overlays
-echo "Managing sj201, buttons, and PWM overlays..."
 for DTO_OVERLAY in sj201 sj201-buttons-overlay sj201-rev10-pwm-fan-overlay; do
-  if ! grep -q "^dtoverlay=$DTO_OVERLAY" "$BOOT_DIRECTORY/config.txt"; then
-    echo "dtoverlay=$DTO_OVERLAY" >> "$BOOT_DIRECTORY/config.txt"
+  if ! grep -q "^dtoverlay=$DTO_OVERLAY$IS_RPI5" "$BOOT_DIRECTORY/config.txt"; then
+    echo "dtoverlay=$DTO_OVERLAY$IS_RPI5" >> "$BOOT_DIRECTORY/config.txt"
   fi
 done
+
 cd /home/$USER
 
 cat <<EOF > /usr/local/bin/update_vocalfusiondriver_if_kernel_updated.sh
