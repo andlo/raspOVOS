@@ -14,11 +14,7 @@ source /home/$USER/.venvs/ovos/bin/activate
 echo "Installing mk2 plugins and skills..."
 uv pip install --no-progress ovos-PHAL[mk2] -c $CONSTRAINTS
 
-# Install mk2 drivers
-#!/bin/bash
-
-set -e
-
+echo "Installing SJ201 drivers..."
 # Variables
 OVOS_HARDWARE_MARK2_VOCALFUSION_REPO_URL="https://github.com/OpenVoiceOS/VocalFusionDriver/"
 OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH="/home/$USER/VocalFusionDriver"
@@ -32,14 +28,17 @@ PROCESSOR_COUNT=$(nproc)
 BOOT_DIRECTORY="/boot"
 
 # Clone VocalFusionDriver Git repository
+echo "Cloning VocalFusionDriver Git repository..."
 git clone --branch "$OVOS_HARDWARE_MARK2_VOCALFUSION_BRANCH" "$OVOS_HARDWARE_MARK2_VOCALFUSION_REPO_URL" "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH"
 
 # Copy DTBO files to /boot/overlays
+echo "Copying DTBO files to /boot/overlays..."
 for DTBO_FILE in sj201 sj201-buttons-overlay sj201-rev10-pwm-fan-overlay; do
   cp "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/$DTBO_FILE" "/boot/overlays/"
 done
 
 # Manage sj201, buttons, and PWM overlays
+echo "Managing sj201, buttons, and PWM overlays..."
 for DTO_OVERLAY in sj201 sj201-buttons-overlay sj201-rev10-pwm-fan-overlay; do
   if ! grep -q "^dtoverlay=$DTO_OVERLAY$IS_RPI5" "$BOOT_DIRECTORY/config.txt"; then
     echo "dtoverlay=$DTO_OVERLAY$IS_RPI5" >> "$BOOT_DIRECTORY/config.txt"
@@ -47,20 +46,25 @@ for DTO_OVERLAY in sj201 sj201-buttons-overlay sj201-rev10-pwm-fan-overlay; do
 done
 
 # Build vocalfusion-soundcard.ko kernel module
+echo "Building vocalfusion-soundcard.ko kernel module..."
 cd "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/driver"
 make -j "$PROCESSOR_COUNT" KDIR="/lib/modules/$KERNEL/build" all
 
 # Copy vocalfusion-soundcard.ko to /lib/modules/$KERNEL
+echo "Copying vocalfusion-soundcard.ko to /lib/modules/$KERNEL..."
 cp "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH/driver/vocalfusion-soundcard.ko" "/lib/modules/$KERNEL/vocalfusion-soundcard.ko"
 depmod
 
 # Create /etc/modules-load.d/vocalfusion.conf file
+echo "Creating /etc/modules-load.d/vocalfusion.conf file..."
 echo "vocalfusion-soundcard" > /etc/modules-load.d/vocalfusion.conf
 
 # Install packages
+echo "Installing required packages..."
 pip install Adafruit-Blinka smbus2 RPi.GPIO gpiod
 
 # Download SJ201 firmware and scripts
+echo "Downloading SJ201 firmware and scripts..."
 mkdir -p /opt/sj201
 curl -o /opt/sj201/xvf3510-flash "https://raw.githubusercontent.com/OpenVoiceOS/ovos-buildroot/0e464466194f58553af11c34f7435dba76ec70a3/buildroot-external/package/vocalfusion/xvf3510-flash"
 chmod 0755 /opt/sj201/xvf3510-flash
@@ -70,6 +74,7 @@ curl -o /opt/sj201/init_tas5806 "https://raw.githubusercontent.com/MycroftAI/mar
 chmod 0755 /opt/sj201/init_tas5806
 
 # Copy SJ201 systemd unit file
+echo "Copying SJ201 systemd unit file..."
 cat <<EOF > /home/$USER/.config/systemd/user/sj201.service"
 [Unit]
 Description=SJ201 Service
@@ -81,9 +86,11 @@ chown "$USER:$USER" "/home/$USER/.config/systemd/user/sj201.service"
 chmod 0644 "/home/$USER/.config/systemd/user/sj201.service"
 
 # Enable SJ201 systemd unit
+echo "Enabling SJ201 systemd unit..."
 sudo -u "$USER" systemctl --user enable sj201.service --force
 
 # Delete source path once compiled
+echo "Deleting source path once compiled..."
 rm -rf "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH"
 
 
