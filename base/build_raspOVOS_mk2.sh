@@ -148,14 +148,12 @@ chown "$USER:$USER" "/home/$USER/.config/systemd/user/sj201.service"
 chmod 0644 "/home/$USER/.config/systemd/user/sj201.service"
 
 # Enable SJ201 systemd unit
-echo "Enabling SJ201 systemd unit..."
-sudo -u "$USER" systemctl --user enable sj201.service --force
+#echo "Enabling SJ201 systemd unit..."
+#sudo -u "$USER" systemctl --user enable sj201.service --force
 
 # Delete source path once compiled
-echo "Deleting source path once compiled..."
-rm -rf "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH"
-
-
+#echo "Deleting source path once compiled..."
+#rm -rf "$OVOS_HARDWARE_MARK2_VOCALFUSION_SRC_PATH"
 
 echo "Creating system level mycroft.conf..."
 mkdir -p /etc/mycroft
