@@ -104,7 +104,7 @@ chmod +x /usr/local/bin/update_vocalfusiondriver_if_kernel_updated.sh
 
 # Create systemd service for updating VocalFusionDriver kernel module
 echo "Creating systemd service for updating VocalFusionDriver kernel module..."
-cat <<EOF > /etc/systemd/system/update-vocalfusiondriver.service
+cat <<EOF > "/etc/systemd/system/update-vocalfusiondriver.service"
 [Unit]
 Description=Update VocalFusionDriver kernel module
 After=network.target 
@@ -136,13 +136,14 @@ chmod 0755 /opt/sj201/init_tas5806
 
 # Copy SJ201 systemd unit file
 echo "Copying SJ201 systemd unit file..."
-cat <<EOF > /home/$USER/.config/systemd/user/sj201.service"
+cat <<EOF > "/home/$USER/.config/systemd/user/sj201.service"
 [Unit]
 Description=SJ201 Service
 
 [Service]
 ExecStart=/opt/sj201/xvf3510-flash
 EOF
+
 chown "$USER:$USER" "/home/$USER/.config/systemd/user/sj201.service"
 chmod 0644 "/home/$USER/.config/systemd/user/sj201.service"
 
