@@ -119,7 +119,7 @@ jobs:
           fi
 
       - name: Modify base image
-        if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' && steps.skip-modify-image.outputs.skip_create_image == 'false' }}
+        if: ${{ steps.check-files.outputs.skip_steps == 'false' && steps.check-image.outputs.skip_create_image == 'false' }}
         uses: TigreGotico/rpi-image-modifier@main
         id: create-image
         env:
