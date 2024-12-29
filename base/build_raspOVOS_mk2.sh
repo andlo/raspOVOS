@@ -23,7 +23,7 @@ cp -v /mounted-github-repo/mark2/files/xvf3510-flash "/usr/libexec/xvf3510-flash
 chmod 0755 "/usr/libexec/xvf3510-flash"
 # cp -v /mounted-github-repo/mark2/files/xvf3510.dtbo "/boot/firmware/overlays/xvf3510.dtbo"
 chmod 0755 "/usr/lib/firmware"
-chmod 0755 "/usr/lib/firmware/xvf3510"
+#chmod 0755 "/usr/lib/firmware/xvf3510"
 cp -v /mounted-github-repo/mark2/files/app_xvf3510_int_spi_boot_v4_2_0.bin "/usr/lib/firmware/xvf3510/app_xvf3510_int_spi_boot_v4_2_0.bin"
 chmod 0644 "/usr/lib/firmware/xvf3510/app_xvf3510_int_spi_boot_v4_2_0.bin"
 cp -v /mounted-github-repo/mark2/files/sj201-reset-led "/usr/bin/sj201-reset-led"
