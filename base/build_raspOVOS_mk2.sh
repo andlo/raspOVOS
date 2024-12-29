@@ -10,17 +10,23 @@ cp -v /mounted-github-repo/patches/boot_config.txt /boot/firmware/config.txt
 
 
 # Mark II devices
-# cp -v /mounted-github-repo/mark2/files/sj201-daemon.conf "/etc/pulse/daemon.conf.d/sj201-daemon.conf"
-# chmod 0644 "/etc/pulse/daemon.conf.d/sj201-daemon.conf"
-# cp -v /mounted-github-repo/mark2/files/92-sj201-default.pa "/etc/pulse/default.pa.d/92-sj201-default.pa"
-# chmod 0644 "/etc/pulse/default.pa.d/92-sj201-default.pa"
+cp -v /mounted-github-repo/mark2/files/sj201-daemon.conf "/etc/pulse/daemon.conf.d/sj201-daemon.conf"
+chmod 0644 "/etc/pulse/daemon.conf.d/sj201-daemon.conf"
+cp -v /mounted-github-repo/mark2/files/92-sj201-default.pa "/etc/pulse/default.pa.d/92-sj201-default.pa"
+chmod 0644 "/etc/pulse/default.pa.d/92-sj201-default.pa"
 cp -v /mounted-github-repo/mark2/files/91-vocalfusion.rules "/etc/udev/rules.d/91-vocalfusion.rules"
 chmod 0644 "/etc/udev/rules.d/91-vocalfusion.rules"
-# cp -v /mounted-github-repo/mark2/files/xvf3510.conf "/usr/share/pulseaudio/alsa-mixer/profile-sets/xvf3510.conf"
-# chmod 0644 "/usr/share/pulseaudio/alsa-mixer/profile-sets/xvf3510.conf"
+cp -v /mounted-github-repo/mark2/files/xvf3510.conf "/usr/share/pulseaudio/alsa-mixer/profile-sets/xvf3510.conf"
+chmod 0644 "/usr/share/pulseaudio/alsa-mixer/profile-sets/xvf3510.conf"
+mkdir -p ".config/wireplumber"
+mkdir -p ".config/wireplumber/main.lua.d"
+cp -v /mounted-github-repo/mark2/files/50-alsa-config.lua ".config/wireplumber/main.lua.d"
+chmod 0644 ".config/wireplumber/main.lua.d/50-alsa-config.lua"
+
 cp -v /mounted-github-repo/mark2/files/xvf3510-flash "/usr/libexec/xvf3510-flash"
 chmod 0755 "/usr/libexec/xvf3510-flash"
 # cp -v /mounted-github-repo/mark2/files/xvf3510.dtbo "/boot/firmware/overlays/xvf3510.dtbo"
+# chmod 0644 "/boot/firmware/overlays/xvf3510.dtbo"
 mkdir -p /usr/lib/firmware
 mkdir -p /usr/lib/firmware/xvf3510
 chmod 0755 "/usr/lib/firmware"
