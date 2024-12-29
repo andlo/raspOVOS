@@ -69,34 +69,34 @@ jobs:
       constraints: "https://github.com/OpenVoiceOS/ovos-releases/raw/refs/heads/main/constraints-alpha.txt"
       update-image: true
          
-  list-languages:
-    needs: [create-release, build-no-ovos-image, build-base-image, build-gui-image, build-mk2-image]
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.list-dirs.outputs.matrix }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+#  list-languages:
+#    needs: [create-release, build-no-ovos-image, build-base-image, build-gui-image, build-mk2-image]
+#    runs-on: ubuntu-latest
+#    outputs:
+#      matrix: ${{ steps.list-dirs.outputs.matrix }}
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v4
+#
+#      - name: List language directories
+#        id: list-dirs
+#        run: |
+#         dirs=$(ls -d ./languages/*/ | grep -v './languages/default/')
+#          dirs_json=$(echo $dirs | sed 's|./languages/||g' | sed 's|/||g' | tr '\n' ' ' | jq -R -s -c 'split(" ") | map(select(length > 0))')
+#          echo "matrix=$dirs_json" >> $GITHUB_OUTPUT
+#          echo "matrix=$dirs_json"
 
-      - name: List language directories
-        id: list-dirs
-        run: |
-          dirs=$(ls -d ./languages/*/ | grep -v './languages/default/')
-          dirs_json=$(echo $dirs | sed 's|./languages/||g' | sed 's|/||g' | tr '\n' ' ' | jq -R -s -c 'split(" ") | map(select(length > 0))')
-          echo "matrix=$dirs_json" >> $GITHUB_OUTPUT
-          echo "matrix=$dirs_json"
-
-  build-images:
-    needs: [create-release, build-no-ovos-image, build-base-image, build-gui-image, list-languages]
-    strategy:
-      matrix:
-        language: ${{ fromJson(needs.list-languages.outputs.matrix) }}
-      # max-parallel: 1
-    uses: ./.github/workflows/build_images.yml
-    with:
-      release_url: ${{ needs.create-release.outputs.release_url }}
-      release_id: ${{ needs.create-release.outputs.release_id }}
-      cache_key: ${{ needs.create-release.outputs.cache_key }}
-      languages: ${{ matrix.language }}
-      base_image_url: ${{ needs.build-base-image.outputs.image_url }}
-      base_image_gui_url: ${{ needs.build-gui-image.outputs.image_url }}
+#  build-images:
+#    needs: [create-release, build-no-ovos-image, build-base-image, build-gui-image, list-languages]
+#    strategy:
+#      matrix:
+#        language: ${{ fromJson(needs.list-languages.outputs.matrix) }}
+#      # max-parallel: 1
+#    uses: ./.github/workflows/build_images.yml
+#    with:
+#      release_url: ${{ needs.create-release.outputs.release_url }}
+#      release_id: ${{ needs.create-release.outputs.release_id }}
+#      cache_key: ${{ needs.create-release.outputs.cache_key }}
+#      languages: ${{ matrix.language }}
+#      base_image_url: ${{ needs.build-base-image.outputs.image_url }}
+#      base_image_gui_url: ${{ needs.build-gui-image.outputs.image_url }}

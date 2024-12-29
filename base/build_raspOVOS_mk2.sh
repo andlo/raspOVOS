@@ -6,7 +6,7 @@
 set -e
 
 echo "Customizing boot/firmware/config.txt..."
-cp -v /mounted-github-repo/patches/boot_config.txt /boot/firmware/config.txt
+cp -v /mounted-github-repo/patches/boot_config_mk2.txt /boot/firmware/config.txt
 
 
 # Mark II devices
@@ -20,8 +20,8 @@ chmod 0644 "/etc/udev/rules.d/91-vocalfusion.rules"
 #chmod 0644 "/usr/share/pulseaudio/alsa-mixer/profile-sets/xvf3510.conf"
 mkdir -p ".config/wireplumber"
 mkdir -p ".config/wireplumber/main.lua.d"
-cp -v /mounted-github-repo/mark2/files/50-alsa-config.lua ".config/wireplumber/main.lua.d"
-chmod 0644 ".config/wireplumber/main.lua.d/50-alsa-config.lua"
+cp -v /mounted-github-repo/mark2/files/50-alsa-config.lua "/home/$USER/.config/wireplumber/main.lua.d"
+chmod 0644 "/home/$USER/.config/wireplumber/main.lua.d/50-alsa-config.lua"
 
 cp -v /mounted-github-repo/mark2/files/xvf3510-flash "/usr/libexec/xvf3510-flash"
 chmod 0755 "/usr/libexec/xvf3510-flash"
