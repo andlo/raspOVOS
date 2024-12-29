@@ -78,8 +78,8 @@ done
 # Manage sj201, buttons, and PWM overlays
 echo "Managing sj201, buttons, and PWM overlays..."
 for DTO_OVERLAY in sj201 sj201-buttons-overlay sj201-rev10-pwm-fan-overlay; do
-  if ! grep -q "^dtoverlay=$DTO_OVERLAY$IS_RPI5" "$BOOT_DIRECTORY/config.txt"; then
-    echo "dtoverlay=$DTO_OVERLAY$IS_RPI5" >> "$BOOT_DIRECTORY/config.txt"
+  if ! grep -q "^dtoverlay=$DTO_OVERLAY$IS_RPI5" "/boot/config.txt"; then
+    echo "dtoverlay=$DTO_OVERLAY$IS_RPI5" >> "/boot/config.txt"
   fi
 done
 
