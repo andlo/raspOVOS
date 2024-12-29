@@ -12,8 +12,8 @@ cp -v /mounted-github-repo/patches/boot_config.txt /boot/firmware/config.txt
 # Mark II devices
 #cp -v /mounted-github-repo/mark2/files/sj201-daemon.conf "/etc/pulse/daemon.conf.d/sj201-daemon.conf"
 #chmod 0644 "/etc/pulse/daemon.conf.d/sj201-daemon.conf"
-cp -v /mounted-github-repo/mark2/files/92-sj201-default.pa "/etc/pulse/default.pa.d/92-sj201-default.pa"
-chmod 0644 "/etc/pulse/default.pa.d/92-sj201-default.pa"
+#cp -v /mounted-github-repo/mark2/files/92-sj201-default.pa "/etc/pulse/default.pa.d/92-sj201-default.pa"
+#chmod 0644 "/etc/pulse/default.pa.d/92-sj201-default.pa"
 cp -v /mounted-github-repo/mark2/files/91-vocalfusion.rules "/etc/udev/rules.d/91-vocalfusion.rules"
 chmod 0644 "/etc/udev/rules.d/91-vocalfusion.rules"
 cp -v /mounted-github-repo/mark2/files/xvf3510.conf "/usr/share/pulseaudio/alsa-mixer/profile-sets/xvf3510.conf"
