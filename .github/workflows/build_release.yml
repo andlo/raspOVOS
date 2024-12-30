@@ -16,7 +16,27 @@ jobs:
     uses: ./.github/workflows/create_release.yml
     with:
       base_name: raspOVOS-bookworm-arm64-lite
-      base_txt: Raspberry Pi OS Bookworm Lite with OpenVoiceOS modifications
+      base_txt: |
+        Raspberry Pi OS Bookworm Lite with OpenVoiceOS modifications and language-specific images
+
+        Release notes:
+        Base images are built using the Raspberry Pi OS Bookworm Lite image.
+        - raspOVOS-NO-OVOS-bookworm-arm64-lite.img: Raspberry Pi OS Bookworm Lite with no OpenVoiceOS modifications
+            Base image prepared for OpenVoiceOS modifications. 
+        - raspOVOS-bookworm-arm64-lite.img: Raspberry Pi OS Bookworm Lite with OpenVoiceOS modifications
+            Base image with OpenVoiceOS modifications.
+        - raspOVOS-GUI-bookworm-arm64-lite.img: Raspberry Pi OS Bookworm Lite with OpenVoiceOS modifications and a graphical user interface
+            Base image with OpenVoiceOS modifications and a graphical user interface.
+        - raspOVOS-MK2-bookworm-arm64-lite.img: Raspberry Pi OS Bookworm Lite with OpenVoiceOS modifications and a Mark II interface
+            Base image with OpenVoiceOS modifications and configured for Mark II hardware.
+
+        Languages:
+        For each language a laguage specific image is built using the base images added language specific configurations.
+        - raspOVOS-bookworm-<language>-arm64-lite.img: Raspberry Pi OS Bookworm Lite with OpenVoiceOS modifications
+        - raspOVOS-GUI-<language>-bookworm-arm64-lite.img: Raspberry Pi OS Bookworm Lite with OpenVoiceOS modifications and a graphical user interface
+        - raspOVOS-MK2-<language>-bookworm-arm64-lite.img: Raspberry Pi OS Bookworm Lite with OpenVoiceOS modifications and a Mark II interface
+
+
 
   build-no-ovos-image:
     needs: create-release
